@@ -15,7 +15,7 @@
      ═══════════════════════════════════ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail }
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, getDocs, query, where, addDoc, onSnapshot, serverTimestamp, deleteDoc, orderBy }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -42,7 +42,7 @@ window.__auth = auth;
 window.__db   = db;
 window.__firebaseFns = {
   createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
-  onAuthStateChanged, sendPasswordResetEmail,
+  onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup,
   doc, setDoc, getDoc, updateDoc, collection, getDocs, query, where,
   addDoc, onSnapshot, serverTimestamp, deleteDoc, orderBy
 };
@@ -152,6 +152,23 @@ body::before {
 .auth-link a { color: #b8829a; cursor: pointer; text-decoration: underline; }
 .auth-error { background: rgba(208,120,136,0.08); border: 1px solid rgba(208,120,136,0.2); color: var(--red); border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 14px; display: none; }
 .auth-error.visible { display: block; }
+
+.google-btn {
+  width: 100%; padding: 11px 16px; border-radius: 10px; margin-top: 10px;
+  border: 1px solid var(--border); background: #fff; cursor: pointer;
+  font-family: var(--font); font-size: 14px; font-weight: 500; color: var(--text);
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  transition: all 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.google-btn:hover { border-color: #b8829a; box-shadow: 0 3px 12px rgba(0,0,0,0.1); transform: translateY(-1px); }
+.google-btn img { width: 18px; height: 18px; }
+.auth-divider { display: flex; align-items: center; gap: 10px; margin: 16px 0; }
+.auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.auth-divider span { font-size: 12px; color: var(--text3); white-space: nowrap; }
+
+/* Google role picker overlay */
+.google-role-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.google-role-box { background: #fff; border-radius: 20px; padding: 32px; width: 100%; max-width: 440px; box-shadow: 0 24px 64px rgba(0,0,0,0.2); animation: fadeUp 0.3s ease both; }
 
 /* ── ROLE SELECT (after signup) ── */
 .role-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin: 20px 0; }
@@ -514,6 +531,8 @@ body.dark-mode .pill-tab { border-color: var(--border) !important; }
 body.dark-mode .pill-tab.active { background: #f0c8d8 !important; border-color: #f0c8d8 !important; color: #1f1319 !important; }
 body.dark-mode .role-card { border-color: var(--border) !important; }
 body.dark-mode .role-card.selected { border-color: #f0c8d8 !important; background: rgba(240,200,216,0.08) !important; }
+body.dark-mode .google-btn { background: var(--card) !important; border-color: var(--border) !important; color: var(--text) !important; }
+body.dark-mode .google-role-box { background: var(--card) !important; }
 body.dark-mode .arabic-col { color: #f0c8d8 !important; }
 body.dark-mode .date-input { color-scheme: dark; }
 body.dark-mode .notes-input:focus { background: var(--border) !important; }
@@ -560,6 +579,11 @@ body.dark-mode .notes-input:focus { background: var(--border) !important; }
         <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
       </div>
       <button class="btn btn-primary" onclick="handleLogin()">Sign In</button>
+      <div class="auth-divider"><span>or</span></div>
+      <button class="google-btn" onclick="handleGoogleSignIn()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+        Continue with Google
+      </button>
       <div class="auth-link"><a onclick="handleForgotPassword()">Forgot password?</a></div>
     </div>
 
@@ -602,7 +626,46 @@ body.dark-mode .notes-input:focus { background: var(--border) !important; }
         <input type="text" class="form-input" id="classCode" placeholder="e.g. ABC123">
       </div>
       <button class="btn btn-primary" onclick="handleSignup()">Create Account</button>
+      <div class="auth-divider"><span>or</span></div>
+      <button class="google-btn" onclick="handleGoogleSignIn()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+        Continue with Google
+      </button>
     </div>
+  </div>
+</div>
+
+<!-- Google Role Picker — shown when new Google user hasn't picked a role yet -->
+<div id="googleRoleOverlay" style="display:none" class="google-role-overlay">
+  <div class="google-role-box">
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="font-size:28px;margin-bottom:8px">👋</div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:4px">Welcome!</div>
+      <div style="font-size:13px;color:var(--text3)">One last step — what is your role?</div>
+    </div>
+    <div id="authError2" class="auth-error"></div>
+    <div class="role-cards" id="googleRoleCards">
+      <div class="role-card selected" data-role="student" onclick="selectGoogleRole('student',this)">
+        <div class="role-emoji">🧑‍🎓</div>
+        <div class="role-name">Student</div>
+        <div class="role-desc">Track my memorisation</div>
+      </div>
+      <div class="role-card" data-role="parent" onclick="selectGoogleRole('parent',this)">
+        <div class="role-emoji">👨‍👩‍👧</div>
+        <div class="role-name">Parent</div>
+        <div class="role-desc">Monitor my child</div>
+      </div>
+      <div class="role-card" data-role="teacher" onclick="selectGoogleRole('teacher',this)">
+        <div class="role-emoji">👩‍🏫</div>
+        <div class="role-name">Teacher</div>
+        <div class="role-desc">Manage the class</div>
+      </div>
+    </div>
+    <div id="googleClassCodeGroup" style="margin-top:14px">
+      <label class="form-label">Class Code (optional)</label>
+      <input type="text" class="form-input" id="googleClassCode" placeholder="Enter teacher's class code…">
+    </div>
+    <button class="btn btn-primary" style="margin-top:16px" onclick="confirmGoogleRole()">Continue →</button>
   </div>
 </div>
 
@@ -1072,6 +1135,67 @@ async function linkToTeacherByCode(studentUid, code) {
   }
 }
 
+// ═══════════════════════════════════════════════════════
+// GOOGLE SIGN-IN
+// ═══════════════════════════════════════════════════════
+let pendingGoogleUser = null;
+let selectedGoogleRole = 'student';
+
+async function handleGoogleSignIn() {
+  clearAuthError();
+  try {
+    const {GoogleAuthProvider, signInWithPopup} = fn();
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth(), provider);
+    const user = result.user;
+    // Check if profile already exists
+    const {doc, getDoc} = fn();
+    const snap = await getDoc(doc(db(), 'users', user.uid));
+    if (snap.exists()) {
+      // Existing user — onAuthStateChanged will handle the rest
+      return;
+    }
+    // New Google user — need to pick a role
+    pendingGoogleUser = user;
+    selectedGoogleRole = 'student';
+    document.getElementById('googleRoleOverlay').style.display = 'flex';
+    document.getElementById('googleClassCodeGroup').style.display = 'block';
+  } catch(e) {
+    if (e.code !== 'auth/popup-closed-by-user') {
+      showAuthError(e.message);
+    }
+  }
+}
+
+function selectGoogleRole(role, el) {
+  selectedGoogleRole = role;
+  document.querySelectorAll('#googleRoleCards .role-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('googleClassCodeGroup').style.display = role === 'student' ? 'block' : 'none';
+}
+
+async function confirmGoogleRole() {
+  if (!pendingGoogleUser) return;
+  const user = pendingGoogleUser;
+  const classCode = document.getElementById('googleClassCode')?.value.trim() || '';
+  const inviteToken = 'inv_' + user.uid + '_' + Math.random().toString(36).slice(2, 8);
+  const name = user.displayName || user.email.split('@')[0];
+  const profile = {
+    name, email: user.email, role: selectedGoogleRole, uid: user.uid,
+    inviteToken, classCode, createdAt: new Date().toISOString(),
+    linkedChildren: [], linkedParents: [], linkedTeacher: null,
+    photoURL: user.photoURL || null
+  };
+  const {doc, setDoc} = fn();
+  await setDoc(doc(db(), 'users', user.uid), profile);
+  if (selectedGoogleRole === 'student' && classCode) {
+    await linkToTeacherByCode(user.uid, classCode);
+  }
+  document.getElementById('googleRoleOverlay').style.display = 'none';
+  pendingGoogleUser = null;
+  // onAuthStateChanged will now fire and load the app
+}
+
 async function handleForgotPassword() {
   const email = prompt('Enter your email address to reset your password:');
   if(!email) return;
@@ -1113,7 +1237,12 @@ async function initApp(user) {
 function updateHeaderUser() {
   if(!userProfile) return;
   const initial = (userProfile.name||'U')[0].toUpperCase();
-  document.getElementById('headerAvatar').textContent = initial;
+  const avatarEl = document.getElementById('headerAvatar');
+  if(userProfile.photoURL) {
+    avatarEl.innerHTML = `<img src="${userProfile.photoURL}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" referrerpolicy="no-referrer">`;
+  } else {
+    avatarEl.textContent = initial;
+  }
   document.getElementById('headerName').textContent = userProfile.name||'User';
   const badge = document.getElementById('roleBadge');
   badge.textContent = {teacher:'👩‍🏫 Teacher',parent:'👨‍👩‍👧 Parent',student:'🧑‍🎓 Student'}[userProfile.role]||'';
