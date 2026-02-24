@@ -17,7 +17,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, getDocs, query, where, addDoc, onSnapshot, serverTimestamp, deleteDoc, orderBy }
+import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, getDocs, query, where, addDoc, onSnapshot, serverTimestamp, deleteDoc, orderBy, arrayUnion }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // ════════════════════════════════════
@@ -46,7 +46,8 @@ try {
     createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
     onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup,
     doc, setDoc, getDoc, updateDoc, collection, getDocs, query, where,
-    addDoc, onSnapshot, serverTimestamp, deleteDoc, orderBy
+    addDoc, onSnapshot, serverTimestamp, deleteDoc, orderBy,
+    arrayUnion  /* FIX #2: import arrayUnion properly */
   };
   document.dispatchEvent(new Event('firebaseReady'));
 } catch(err) {
@@ -93,8 +94,6 @@ body::before {
 /* ── SCREENS ── */
 .screen { display: none !important; position: relative; z-index: 1; }
 .screen.active { display: block !important; }
-
-/* Auth screen needs flex for centering */
 #authScreen.active { display: flex !important; }
 
 /* ── AUTH SCREEN ── */
@@ -104,16 +103,13 @@ body::before {
   overflow-y: auto;
 }
 
-/* Particles canvas */
 #authParticles { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.5; mix-blend-mode: screen; pointer-events: none; }
 
-/* Vignette glow */
 #authScreen::before {
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background: radial-gradient(80% 60% at 50% 30%, rgba(184,130,154,0.08), transparent 65%);
 }
 
-/* Animated grid lines */
 .auth-lines { position: absolute; inset: 0; pointer-events: none; opacity: 0.6; }
 .auth-hline, .auth-vline { position: absolute; background: #27272a; will-change: transform,opacity; }
 .auth-hline { left:0; right:0; height:1px; transform:scaleX(0); transform-origin:50% 50%; animation: authDrawX 0.9s cubic-bezier(.22,.61,.36,1) forwards; }
@@ -123,7 +119,6 @@ body::before {
 @keyframes authDrawX{0%{transform:scaleX(0);opacity:0}60%{opacity:.9}100%{transform:scaleX(1);opacity:.6}}
 @keyframes authDrawY{0%{transform:scaleY(0);opacity:0}60%{opacity:.9}100%{transform:scaleY(1);opacity:.6}}
 
-/* Auth header bar */
 .auth-topbar {
   position: absolute; top: 0; left: 0; right: 0;
   display: flex; align-items: center; justify-content: space-between;
@@ -132,7 +127,6 @@ body::before {
 .auth-topbar-brand { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #71717a; }
 .auth-topbar-arabic { font-family: var(--arabic); font-size: 13px; color: #52525b; }
 
-/* Card */
 .auth-box {
   background: rgba(24,24,27,0.75); border: 1px solid rgba(255,255,255,0.08);
   border-radius: 20px; padding: 36px 32px; width: 100%; max-width: 420px;
@@ -151,7 +145,6 @@ body::before {
 .auth-logo h1 { font-size: 22px; font-weight: 700; color: #fafafa; }
 .auth-logo p { font-family: var(--arabic); font-size: 13px; color: #52525b; margin-top: 4px; }
 
-/* Tabs */
 .auth-tabs { display: flex; background: rgba(0,0,0,0.4); border-radius: 10px; padding: 3px; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.06); }
 .auth-tab {
   flex: 1; padding: 8px; border: none; background: transparent; border-radius: 8px;
@@ -165,7 +158,6 @@ body::before {
 .form-group { margin-bottom: 14px; }
 .form-label { font-size: 11px; color: #a1a1aa; font-weight: 500; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-/* Input with icon wrapper */
 .auth-input-wrap { position: relative; }
 .auth-input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #52525b; pointer-events: none; }
 .form-input {
@@ -214,11 +206,9 @@ body::before {
 .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
 .auth-divider span { font-size: 11px; color: #52525b; text-transform: uppercase; letter-spacing: 0.1em; }
 
-/* Google role picker overlay */
 .google-role-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
 .google-role-box { background: #18181b; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 32px; width: 100%; max-width: 440px; box-shadow: 0 24px 64px rgba(0,0,0,0.6); animation: fadeUp 0.3s ease both; color: #fafafa; }
 
-/* ── ROLE SELECT (after signup) ── */
 .role-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin: 16px 0; }
 .role-card {
   border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px 10px; text-align: center;
@@ -256,7 +246,6 @@ header {
 .user-avatar { width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg,var(--teal),var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; font-weight: 700; }
 .user-name { font-size: 13px; font-weight: 600; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-/* Dropdown */
 .header-dropdown-wrap { position: relative; }
 .header-dropdown {
   position: absolute; top: calc(100% + 8px); right: 0; background: #fff;
@@ -269,7 +258,6 @@ header {
 .hd-item.danger { color: var(--red); }
 .hd-divider { height: 1px; background: var(--border); }
 
-/* Theme toggle */
 .theme-toggle { width: 44px; height: 24px; border-radius: 12px; border: none; background: #e0d4dc; cursor: pointer; position: relative; transition: background 0.3s; padding: 3px; display: flex; align-items: center; }
 body.dark-mode .theme-toggle { background: #4a2a3c; justify-content: flex-end; }
 .tt-knob { width: 18px; height: 18px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; box-shadow: 0 1px 4px rgba(0,0,0,0.2); transition: all 0.3s; }
@@ -405,14 +393,12 @@ td { padding: 12px 14px; font-size: 13px; color: var(--text); vertical-align: mi
 .revised-today-dot.yes { background: var(--green); }
 .revised-today-dot.no  { background: var(--red); }
 
-/* Alerts */
 .alert-card { background: rgba(208,120,136,0.06); border: 1px solid rgba(208,120,136,0.2); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; }
 .alert-info { display: flex; flex-direction: column; gap: 3px; }
 .alert-name { font-size: 13px; font-weight: 600; }
 .alert-detail { font-size: 12px; color: var(--text3); }
 .alert-days { font-size: 12px; color: var(--red); font-weight: 600; }
 
-/* Messages */
 .message-thread { display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto; padding-right: 4px; }
 .message-bubble { max-width: 75%; padding: 12px 16px; border-radius: 14px; font-size: 13px; line-height: 1.5; }
 .message-bubble.sent { align-self: flex-end; background: #b8829a; color: #fff; border-bottom-right-radius: 4px; }
@@ -422,18 +408,15 @@ td { padding: 12px 14px; font-size: 13px; color: var(--text); vertical-align: mi
 .message-compose input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; font-family: var(--font); font-size: 13px; outline: none; color: var(--text); transition: border-color 0.2s; }
 .message-compose input:focus { border-color: #b8829a; }
 
-/* Parent dashboard */
 .children-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(300px,1fr)); gap: 16px; }
 .child-card { background: #fff; border-radius: var(--radius); padding: 22px; box-shadow: 0 4px 20px rgba(160,110,145,0.12); }
 .child-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
 .child-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg,var(--teal),var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; font-weight: 700; }
 
-/* Invite system */
 .invite-box { background: rgba(184,130,154,0.06); border: 1px solid rgba(184,130,154,0.2); border-radius: 12px; padding: 16px; margin-top: 16px; }
 .invite-link { font-family: monospace; font-size: 12px; color: var(--text2); background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; word-break: break-all; margin: 8px 0; display: block; }
 .invite-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
-/* Surah modal */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); z-index: 500; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; padding: 20px; }
 .modal-overlay.open { opacity: 1; pointer-events: all; }
 .modal { background: #fff; border-radius: 20px; padding: 30px; width: 440px; max-width: 96vw; transform: translateY(16px); transition: transform 0.2s; box-shadow: 0 24px 64px rgba(0,0,0,0.2); }
@@ -444,7 +427,6 @@ td { padding: 12px 14px; font-size: 13px; color: var(--text); vertical-align: mi
 .modal-input:focus { border-color: #b8829a; }
 .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
 
-/* Surah viewer modal */
 .sv-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(12px); z-index: 600; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.25s; padding: 20px; }
 .sv-overlay.open { opacity: 1; pointer-events: all; }
 .sv-modal { background: #fff; border-radius: 20px; width: 700px; max-width: 96vw; max-height: 86vh; display: flex; flex-direction: column; transform: translateY(20px) scale(0.97); transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1); overflow: hidden; box-shadow: 0 40px 120px rgba(0,0,0,0.4); }
@@ -475,7 +457,6 @@ td { padding: 12px 14px; font-size: 13px; color: var(--text); vertical-align: mi
 .sv-loading { text-align: center; padding: 48px; color: rgba(58,42,52,0.4); font-size: 13px; }
 .sv-spinner { width: 28px; height: 28px; border: 2px solid rgba(184,130,154,0.15); border-top-color: rgba(184,130,154,0.6); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 14px; }
 
-/* History */
 .history-list { display: flex; flex-direction: column; gap: 9px; }
 .history-item { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; background: #fff; border-radius: 14px; box-shadow: 0 2px 10px rgba(160,110,145,0.09); animation: fadeUp 0.3s ease both; }
 .history-icon { width: 34px; height: 34px; border-radius: 9px; background: rgba(184,130,154,0.08); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
@@ -484,39 +465,30 @@ td { padding: 12px 14px; font-size: 13px; color: var(--text); vertical-align: mi
 .history-detail { font-size: 11px; color: var(--text3); margin-top: 2px; }
 .history-time { font-size: 10px; color: var(--text3); white-space: nowrap; }
 
-/* Due list */
 .due-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: rgba(208,120,136,0.06); border: 1px solid rgba(208,120,136,0.18); border-radius: 10px; }
 .due-item + .due-item { margin-top: 8px; }
 
-/* Juz bars */
 .juz-bar { background: #fff; border-radius: 14px; padding: 14px 18px; box-shadow: 0 3px 14px rgba(160,110,145,0.09); margin-bottom: 12px; }
 
-/* Comparison chart */
 .compare-wrap { background: #fff; border-radius: var(--radius); padding: 24px; box-shadow: 0 4px 20px rgba(160,110,145,0.12); margin-bottom: 24px; }
 
-/* Notification badge */
 .notif-badge { display: inline-block; background: var(--red); color: #fff; border-radius: 10px; font-size: 10px; font-weight: 700; padding: 1px 6px; min-width: 18px; text-align: center; margin-left: 4px; }
 
-/* Loading overlay */
 #loadingOverlay { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; transition: opacity 0.4s; }
 #loadingOverlay.hide { opacity: 0; pointer-events: none; }
 .loading-spinner { width: 40px; height: 40px; border: 3px solid rgba(184,130,154,0.15); border-top-color: #b8829a; border-radius: 50%; animation: spin 0.8s linear infinite; }
 
-/* Empty states */
 .empty-state { text-align: center; padding: 48px 20px; color: var(--text3); }
 .empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; }
 .empty-state p { font-size: 14px; }
 
-/* Pill tabs for sub-sections */
 .pill-tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
 .pill-tab { padding: 7px 16px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text3); font-family: var(--font); font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
 .pill-tab.active { background: #b8829a; border-color: #b8829a; color: #fff; font-weight: 600; }
 
-/* Toast */
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #fff; border: 1px solid rgba(184,130,154,0.3); border-radius: 14px; padding: 14px 22px; display: flex; align-items: center; gap: 12px; box-shadow: 0 8px 40px rgba(0,0,0,0.2); z-index: 9000; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s; opacity: 0; min-width: 260px; }
 .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-/* Responsive */
 @media (max-width: 900px) {
   header, nav, main { padding-left: 16px; padding-right: 16px; }
   .charts-grid { grid-template-columns: 1fr; }
@@ -528,11 +500,9 @@ td { padding: 12px 14px; font-size: 13px; color: var(--text); vertical-align: mi
   nav { top: 61px; }
 }
 
-/* Animations */
 @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
 @keyframes spin { to { transform:rotate(360deg); } }
 
-/* Scrollbar */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
@@ -581,7 +551,6 @@ body.dark-mode .role-card { border-color: var(--border) !important; }
 body.dark-mode .role-card.selected { border-color: #f0c8d8 !important; background: rgba(240,200,216,0.08) !important; }
 body.dark-mode .google-btn { background: rgba(0,0,0,0.4) !important; border-color: rgba(255,255,255,0.1) !important; color: #fafafa !important; }
 body.dark-mode .google-role-box { background: #18181b !important; }
-/* Auth screen is always dark regardless of theme toggle */
 #authScreen .form-input, #authScreen .form-select { background: rgba(0,0,0,0.5) !important; border-color: rgba(255,255,255,0.1) !important; color: #fafafa !important; }
 body.dark-mode .arabic-col { color: #f0c8d8 !important; }
 body.dark-mode .date-input { color-scheme: dark; }
@@ -599,49 +568,29 @@ body.dark-mode .notes-input:focus { background: var(--border) !important; }
   </div>
 </div>
 
-<!-- ══════════════════════════════════
-     AUTH SCREEN
-══════════════════════════════════ -->
+<!-- AUTH SCREEN -->
 <div id="authScreen" class="screen">
-
-  <!-- Particles -->
   <canvas id="authParticles"></canvas>
-
-  <!-- Vignette glow -->
   <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(80% 60% at 50% 30%,rgba(184,130,154,0.07),transparent 65%)"></div>
-
-  <!-- Animated grid lines -->
   <div class="auth-lines">
-    <div class="auth-hline"></div>
-    <div class="auth-hline"></div>
-    <div class="auth-hline"></div>
-    <div class="auth-vline"></div>
-    <div class="auth-vline"></div>
-    <div class="auth-vline"></div>
+    <div class="auth-hline"></div><div class="auth-hline"></div><div class="auth-hline"></div>
+    <div class="auth-vline"></div><div class="auth-vline"></div><div class="auth-vline"></div>
   </div>
-
-  <!-- Top bar -->
   <div class="auth-topbar">
     <span class="auth-topbar-brand">Quran Tracker</span>
     <span class="auth-topbar-arabic">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</span>
   </div>
-
-  <!-- Card -->
   <div class="auth-box">
     <div class="auth-logo">
       <div class="auth-logo-icon">☪️</div>
       <h1>Welcome back</h1>
       <p>Sign in to continue your journey</p>
     </div>
-
     <div id="authError" class="auth-error"></div>
-
-    <!-- Tabs -->
     <div class="auth-tabs">
       <button class="auth-tab active" onclick="switchAuthTab('login')">Sign In</button>
       <button class="auth-tab" onclick="switchAuthTab('signup')">Create Account</button>
     </div>
-
     <!-- Login -->
     <div id="loginForm" class="auth-form active">
       <div class="form-group">
@@ -670,7 +619,6 @@ body.dark-mode .notes-input:focus { background: var(--border) !important; }
       </button>
       <div class="auth-link" style="margin-top:20px">Don't have an account? <a onclick="switchAuthTab('signup')">Create one</a></div>
     </div>
-
     <!-- Signup -->
     <div id="signupForm" class="auth-form">
       <div class="form-group">
@@ -698,19 +646,13 @@ body.dark-mode .notes-input:focus { background: var(--border) !important; }
         <label class="form-label">I am a…</label>
         <div class="role-cards" id="roleCards">
           <div class="role-card selected" data-role="student" onclick="selectRole('student',this)">
-            <div class="role-emoji">🧑‍🎓</div>
-            <div class="role-name">Student</div>
-            <div class="role-desc">Track my memorisation</div>
+            <div class="role-emoji">🧑‍🎓</div><div class="role-name">Student</div><div class="role-desc">Track my memorisation</div>
           </div>
           <div class="role-card" data-role="parent" onclick="selectRole('parent',this)">
-            <div class="role-emoji">👨‍👩‍👧</div>
-            <div class="role-name">Parent</div>
-            <div class="role-desc">Monitor my child</div>
+            <div class="role-emoji">👨‍👩‍👧</div><div class="role-name">Parent</div><div class="role-desc">Monitor my child</div>
           </div>
           <div class="role-card" data-role="teacher" onclick="selectRole('teacher',this)">
-            <div class="role-emoji">👩‍🏫</div>
-            <div class="role-name">Teacher</div>
-            <div class="role-desc">Manage the class</div>
+            <div class="role-emoji">👩‍🏫</div><div class="role-name">Teacher</div><div class="role-desc">Manage the class</div>
           </div>
         </div>
       </div>
@@ -729,7 +671,7 @@ body.dark-mode .notes-input:focus { background: var(--border) !important; }
   </div>
 </div>
 
-<!-- Google Role Picker — shown when new Google user hasn't picked a role yet -->
+<!-- Google Role Picker -->
 <div id="googleRoleOverlay" style="display:none" class="google-role-overlay">
   <div class="google-role-box">
     <div style="text-align:center;margin-bottom:24px">
@@ -740,19 +682,13 @@ body.dark-mode .notes-input:focus { background: var(--border) !important; }
     <div id="authError2" class="auth-error"></div>
     <div class="role-cards" id="googleRoleCards">
       <div class="role-card selected" data-role="student" onclick="selectGoogleRole('student',this)">
-        <div class="role-emoji">🧑‍🎓</div>
-        <div class="role-name">Student</div>
-        <div class="role-desc">Track my memorisation</div>
+        <div class="role-emoji">🧑‍🎓</div><div class="role-name">Student</div><div class="role-desc">Track my memorisation</div>
       </div>
       <div class="role-card" data-role="parent" onclick="selectGoogleRole('parent',this)">
-        <div class="role-emoji">👨‍👩‍👧</div>
-        <div class="role-name">Parent</div>
-        <div class="role-desc">Monitor my child</div>
+        <div class="role-emoji">👨‍👩‍👧</div><div class="role-name">Parent</div><div class="role-desc">Monitor my child</div>
       </div>
       <div class="role-card" data-role="teacher" onclick="selectGoogleRole('teacher',this)">
-        <div class="role-emoji">👩‍🏫</div>
-        <div class="role-name">Teacher</div>
-        <div class="role-desc">Manage the class</div>
+        <div class="role-emoji">👩‍🏫</div><div class="role-name">Teacher</div><div class="role-desc">Manage the class</div>
       </div>
     </div>
     <div id="googleClassCodeGroup" style="margin-top:14px">
@@ -763,18 +699,12 @@ body.dark-mode .notes-input:focus { background: var(--border) !important; }
   </div>
 </div>
 
-<!-- ══════════════════════════════════
-     MAIN APP SCREEN
-══════════════════════════════════ -->
+<!-- MAIN APP SCREEN -->
 <div id="appScreen" class="screen">
-
   <header>
     <div class="header-left">
       <div class="logo-icon">☪️</div>
-      <div class="header-title">
-        <h1>Quran Tracker</h1>
-        <p>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</p>
-      </div>
+      <div class="header-title"><h1>Quran Tracker</h1><p>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</p></div>
     </div>
     <div class="header-right">
       <div id="roleBadge" class="role-badge"></div>
@@ -792,16 +722,11 @@ body.dark-mode .notes-input:focus { background: var(--border) !important; }
           <div class="hd-item danger" onclick="handleSignOut()">🚪 Sign Out</div>
         </div>
       </div>
-      <button class="theme-toggle" onclick="toggleTheme()">
-        <span class="tt-knob" id="themeKnob">🌙</span>
-      </button>
+      <button class="theme-toggle" onclick="toggleTheme()"><span class="tt-knob" id="themeKnob">🌙</span></button>
     </div>
   </header>
-
   <nav id="mainNav"></nav>
-
   <main>
-    <!-- ── STUDENT TABS ── -->
     <div id="tab-overview" class="tab-section">
       <div class="kpi-grid" id="kpiGrid"></div>
       <div id="badgesSectionOverview" class="badges-grid" style="margin-bottom:24px"></div>
@@ -816,13 +741,9 @@ body.dark-mode .notes-input:focus { background: var(--border) !important; }
             <div class="legend-item"><div class="legend-dot" style="background:var(--border2)"></div>Not Started</div>
           </div>
         </div>
-        <div class="card">
-          <div class="card-title">📊 Progress by Juz</div>
-          <div class="chart-wrap" style="height:280px"><canvas id="juzChart"></canvas></div>
-        </div>
+        <div class="card"><div class="card-title">📊 Progress by Juz</div><div class="chart-wrap" style="height:280px"><canvas id="juzChart"></canvas></div></div>
       </div>
     </div>
-
     <div id="tab-surahs" class="tab-section">
       <div class="table-controls">
         <input type="text" class="search-box" id="searchInput" placeholder="🔍  Search surah…" oninput="filterTable()">
@@ -833,21 +754,13 @@ body.dark-mode .notes-input:focus { background: var(--border) !important; }
         <button class="filter-btn" onclick="setFilter('not-started',this)">⬜ Not Started</button>
       </div>
       <div class="table-wrap">
-        <table>
-          <thead><tr>
-            <th>#</th><th>Surah</th><th>Arabic</th><th>Juz</th><th>Verses</th>
-            <th>Status</th><th>Last Revised</th><th>Confidence</th><th>Notes</th>
-          </tr></thead>
-          <tbody id="surahTableBody"></tbody>
-        </table>
+        <table><thead><tr><th>#</th><th>Surah</th><th>Arabic</th><th>Juz</th><th>Verses</th><th>Status</th><th>Last Revised</th><th>Confidence</th><th>Notes</th></tr></thead><tbody id="surahTableBody"></tbody></table>
       </div>
     </div>
-
     <div id="tab-juz" class="tab-section">
       <div style="margin-bottom:18px"><h2 style="font-size:19px;font-weight:600;margin-bottom:4px">Progress by Juz</h2><p style="color:var(--text3);font-size:13px">30 sections of the Quran</p></div>
       <div id="juzBarsContainer"></div>
     </div>
-
     <div id="tab-heatmap" class="tab-section">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
         <h2 style="font-size:19px;font-weight:600">Revision Calendar</h2>
@@ -856,10 +769,7 @@ body.dark-mode .notes-input:focus { background: var(--border) !important; }
       <div class="heatmap-wrap">
         <div class="heatmap-months" id="heatmapMonths"></div>
         <div class="heatmap-body">
-          <div class="day-labels">
-            <div class="day-label"></div><div class="day-label">Mon</div><div class="day-label"></div>
-            <div class="day-label">Wed</div><div class="day-label"></div><div class="day-label">Fri</div><div class="day-label"></div>
-          </div>
+          <div class="day-labels"><div class="day-label"></div><div class="day-label">Mon</div><div class="day-label"></div><div class="day-label">Wed</div><div class="day-label"></div><div class="day-label">Fri</div><div class="day-label"></div></div>
           <div class="heatmap-cols" id="heatmapCols"></div>
         </div>
         <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text3);margin-top:12px">
@@ -872,17 +782,12 @@ body.dark-mode .notes-input:focus { background: var(--border) !important; }
           More
         </div>
       </div>
-      <div class="card">
-        <div class="card-title">⚠️ Due for Revision (7+ days)</div>
-        <div id="dueList"></div>
-      </div>
+      <div class="card"><div class="card-title">⚠️ Due for Revision (7+ days)</div><div id="dueList"></div></div>
     </div>
-
     <div id="tab-goals" class="tab-section">
       <div style="margin-bottom:20px"><h2 style="font-size:19px;font-weight:600;margin-bottom:4px">Your Goals</h2><p style="color:var(--text3);font-size:13px">Set targets and track your journey</p></div>
       <div class="goals-grid" id="goalsGrid"></div>
     </div>
-
     <div id="tab-history" class="tab-section">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
         <div><h2 style="font-size:19px;font-weight:600;margin-bottom:3px">Activity History</h2><p style="color:var(--text3);font-size:13px">Every change you've made</p></div>
@@ -890,13 +795,11 @@ body.dark-mode .notes-input:focus { background: var(--border) !important; }
       </div>
       <div id="historyList" class="history-list"></div>
     </div>
-
     <div id="tab-connect" class="tab-section">
       <div style="margin-bottom:20px"><h2 style="font-size:19px;font-weight:600;margin-bottom:4px">Connect with Family</h2><p style="color:var(--text3);font-size:13px">Share your progress with parents or link a child's account</p></div>
       <div id="connectContent"></div>
     </div>
-
-    <!-- ── TEACHER TABS ── -->
+    <!-- Teacher Tabs -->
     <div id="tab-teacher-overview" class="tab-section">
       <div style="margin-bottom:20px"><h2 style="font-size:19px;font-weight:600;margin-bottom:4px">Class Overview</h2><p style="color:var(--text3);font-size:13px">All students at a glance</p></div>
       <div class="pill-tabs">
@@ -908,35 +811,26 @@ body.dark-mode .notes-input:focus { background: var(--border) !important; }
         <div id="revisedTodayBar" style="margin-bottom:16px;padding:12px 16px;background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(160,110,145,0.1);display:flex;align-items:center;gap:16px;flex-wrap:wrap"></div>
         <div class="class-overview-grid" id="classOverviewGrid"></div>
       </div>
-      <div id="teacherAlertsPane" style="display:none">
-        <div id="alertsList"></div>
-      </div>
-      <div id="teacherComparePane" style="display:none">
-        <div class="compare-wrap"><div class="card-title">📊 Memorisation Comparison</div><div style="height:320px"><canvas id="compareChart"></canvas></div></div>
-      </div>
+      <div id="teacherAlertsPane" style="display:none"><div id="alertsList"></div></div>
+      <div id="teacherComparePane" style="display:none"><div class="compare-wrap"><div class="card-title">📊 Memorisation Comparison</div><div style="height:320px"><canvas id="compareChart"></canvas></div></div></div>
     </div>
-
     <div id="tab-teacher-messages" class="tab-section">
       <div style="margin-bottom:20px"><h2 style="font-size:19px;font-weight:600;margin-bottom:4px">Messages from Parents</h2><p style="color:var(--text3);font-size:13px">Direct communication with families</p></div>
       <div id="teacherMessagesContent"></div>
     </div>
-
     <div id="tab-teacher-invite" class="tab-section">
       <div style="margin-bottom:20px"><h2 style="font-size:19px;font-weight:600;margin-bottom:4px">Invite & Manage</h2><p style="color:var(--text3);font-size:13px">Invite students and manage the class</p></div>
       <div id="teacherInviteContent"></div>
     </div>
-
-    <!-- ── PARENT TABS ── -->
+    <!-- Parent Tabs -->
     <div id="tab-parent-children" class="tab-section">
       <div style="margin-bottom:20px"><h2 style="font-size:19px;font-weight:600;margin-bottom:4px">My Children</h2><p style="color:var(--text3);font-size:13px">Monitor your children's Quran progress</p></div>
       <div id="parentChildrenContent"></div>
     </div>
-
     <div id="tab-parent-messages" class="tab-section">
       <div style="margin-bottom:20px"><h2 style="font-size:19px;font-weight:600;margin-bottom:4px">Message Teacher</h2><p style="color:var(--text3);font-size:13px">Send notes or questions to the class teacher</p></div>
       <div id="parentMessagesContent"></div>
     </div>
-
     <div id="tab-parent-connect" class="tab-section">
       <div style="margin-bottom:20px"><h2 style="font-size:19px;font-weight:600;margin-bottom:4px">Link a Child</h2><p style="color:var(--text3);font-size:13px">Connect to your child's account</p></div>
       <div id="parentConnectContent"></div>
@@ -985,18 +879,37 @@ body.dark-mode .notes-input:focus { background: var(--border) !important; }
   </div>
 </div>
 
-<!-- Student Detail Modal (Teacher view) -->
+<!-- Student Detail Modal -->
 <div class="modal-overlay" id="studentDetailModal">
   <div class="modal" style="width:560px">
     <div class="modal-title" id="sdmTitle">Student Progress</div>
     <div id="sdmContent"></div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeStudentModal()">Close</button>
-    </div>
+    <div class="modal-actions"><button class="btn btn-secondary" onclick="closeStudentModal()">Close</button></div>
   </div>
 </div>
 
 <script>
+// ═══════════════════════════════════════════════════════
+// SANITIZATION HELPER — FIX #8 (XSS)
+// ═══════════════════════════════════════════════════════
+function esc(str) {
+  if (!str) return '';
+  const div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
+// ═══════════════════════════════════════════════════════
+// LOCAL DATE HELPER — FIX #13 (timezone)
+// ═══════════════════════════════════════════════════════
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function localDateStr(date) {
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+}
+
 // ═══════════════════════════════════════════════════════
 // DATA CONSTANTS
 // ═══════════════════════════════════════════════════════
@@ -1085,7 +998,7 @@ const BADGES=[
 // ═══════════════════════════════════════════════════════
 let currentUser = null;
 let userProfile = null;
-let userState   = null; // surahs, heatmap, history, goals, earnedBadges
+let userState   = null;
 let activeFilter = 'all';
 let activeTab   = '';
 let donutChart_ = null;
@@ -1095,6 +1008,7 @@ let verseCache  = {};
 let verseMode   = 'arabic';
 let editGoalId  = null;
 let unsubListeners = [];
+let currentSurahFetchId = 0; // FIX #15: abort controller for stale fetches
 
 // ═══════════════════════════════════════════════════════
 // FRESH STATE
@@ -1115,38 +1029,40 @@ function freshState() {
 }
 
 // ═══════════════════════════════════════════════════════
-// FIREBASE HELPERS
+// FIREBASE HELPERS — FIX #1: use fn() consistently
 // ═══════════════════════════════════════════════════════
 function db()  { return window.__db; }
 function auth(){ return window.__auth; }
 function fn()  { return window.__firebaseFns; }
 
-// Shorthand Firebase accessors - avoids repeated destructuring
-function _doc()       { return window.__firebaseFns.doc; }
-function _getDoc()    { return window.__firebaseFns.getDoc; }
-function _setDoc()    { return window.__firebaseFns.setDoc; }
-function _updateDoc() { return window.__firebaseFns.updateDoc; }
-function _addDoc()    { return window.__firebaseFns.addDoc; }
-function _collection(){ return window.__firebaseFns.collection; }
-function _query()     { return window.__firebaseFns.query; }
-function _where()     { return window.__firebaseFns.where; }
-function _getDocs()   { return window.__firebaseFns.getDocs; }
-function _orderBy()   { return window.__firebaseFns.orderBy; }
-function _arrayUnion(){ return window.__firebaseFns.arrayUnion||function(v){return v;} }
-function _serverTimestamp(){ return window.__firebaseFns.serverTimestamp; }
+// FIX #9: Find surah by number, not by array index
+function findSurahIndex(surahNum) {
+  return userState.surahs.findIndex(s => s.n === surahNum);
+}
 
+// FIX #1: All Firestore calls now use fn().xxx consistently
 async function saveState() {
   if (!currentUser || !userState) return;
-    await setDoc(_doc()(db(),'users',currentUser.uid,'data','state'), userState);
+  try {
+    await fn().setDoc(fn().doc(db(), 'users', currentUser.uid, 'data', 'state'), userState);
+  } catch(e) {
+    console.error('Failed to save state:', e);
+    showToast('⚠️', 'Save failed', 'Changes may not be saved');
+  }
 }
 
 async function loadState() {
-    const snap = await getDoc(_doc()(db(),'users',currentUser.uid,'data','state'));
+  const snap = await fn().getDoc(fn().doc(db(), 'users', currentUser.uid, 'data', 'state'));
   if (snap.exists()) {
     const saved = snap.data();
-    // Merge to ensure all 114 surahs present
     const base = freshState();
-    if (saved.surahs && saved.surahs.length === 114) base.surahs = saved.surahs;
+    if (saved.surahs && saved.surahs.length === 114) {
+      // FIX #10: Merge saved data with defaults to ensure all fields exist
+      base.surahs = saved.surahs.map(s => ({
+        ...freshState().surahs.find(fs => fs.n === s.n) || {},
+        ...s
+      }));
+    }
     base.heatmap = saved.heatmap || {};
     base.history = saved.history || [];
     base.earnedBadges = saved.earnedBadges || [];
@@ -1159,7 +1075,7 @@ async function loadState() {
 }
 
 async function loadProfile() {
-    const snap = await getDoc(_doc()(db(),'users',currentUser.uid));
+  const snap = await fn().getDoc(fn().doc(db(), 'users', currentUser.uid));
   if (snap.exists()) userProfile = snap.data();
 }
 
@@ -1168,59 +1084,26 @@ async function loadProfile() {
 // ═══════════════════════════════════════════════════════
 let selectedRole = 'student';
 
-// ═══════════════════════════════════════════════════════
-// AUTH PARTICLES
-// ═══════════════════════════════════════════════════════
+// Particles
 function initAuthParticles() {
   const canvas = document.getElementById('authParticles');
   if(!canvas) return;
   const ctx = canvas.getContext('2d');
   let ps = [], raf = 0;
-
   const setSize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
   setSize();
-
-  const make = () => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    v: Math.random() * 0.25 + 0.05,
-    o: Math.random() * 0.3 + 0.1
-  });
-
-  const init = () => {
-    ps = [];
-    const count = Math.floor((canvas.width * canvas.height) / 9000);
-    for(let i = 0; i < count; i++) ps.push(make());
-  };
-
-  const draw = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ps.forEach(p => {
-      p.y -= p.v;
-      if(p.y < 0) { p.x = Math.random() * canvas.width; p.y = canvas.height + 20; p.v = Math.random() * 0.25 + 0.05; p.o = Math.random() * 0.3 + 0.1; }
-      ctx.fillStyle = `rgba(250,250,250,${p.o})`;
-      ctx.fillRect(p.x, p.y, 0.7, 2.2);
-    });
-    raf = requestAnimationFrame(draw);
-  };
-
+  const make = () => ({x:Math.random()*canvas.width,y:Math.random()*canvas.height,v:Math.random()*0.25+0.05,o:Math.random()*0.3+0.1});
+  const init = () => { ps=[]; const count=Math.floor((canvas.width*canvas.height)/9000); for(let i=0;i<count;i++) ps.push(make()); };
+  const draw = () => { ctx.clearRect(0,0,canvas.width,canvas.height); ps.forEach(p=>{p.y-=p.v;if(p.y<0){p.x=Math.random()*canvas.width;p.y=canvas.height+20;p.v=Math.random()*0.25+0.05;p.o=Math.random()*0.3+0.1;}ctx.fillStyle=`rgba(250,250,250,${p.o})`;ctx.fillRect(p.x,p.y,0.7,2.2);}); raf=requestAnimationFrame(draw); };
   const onResize = () => { setSize(); init(); };
   window.addEventListener('resize', onResize);
-  init();
-  raf = requestAnimationFrame(draw);
-
-  // Stop particles when auth screen hidden
+  init(); raf = requestAnimationFrame(draw);
   return () => { window.removeEventListener('resize', onResize); cancelAnimationFrame(raf); };
 }
 
 let _stopParticles = null;
-
-function startAuthParticles() {
-  if(!_stopParticles) _stopParticles = initAuthParticles();
-}
-function stopAuthParticles() {
-  if(_stopParticles) { _stopParticles(); _stopParticles = null; }
-}
+function startAuthParticles() { if(!_stopParticles) _stopParticles = initAuthParticles(); }
+function stopAuthParticles() { if(_stopParticles) { _stopParticles(); _stopParticles = null; } }
 
 let _pwVisible = false;
 function togglePasswordVisibility() {
@@ -1240,15 +1123,12 @@ function switchAuthTab(tab) {
 
 function selectRole(role, el) {
   selectedRole = role;
-  document.querySelectorAll('.role-card').forEach(c=>c.classList.remove('selected'));
+  document.querySelectorAll('#roleCards .role-card').forEach(c=>c.classList.remove('selected'));
   el.classList.add('selected');
   document.getElementById('classCodeGroup').style.display = (role==='student')?'block':'none';
 }
 
-function showAuthError(msg) {
-  const el=document.getElementById('authError');
-  el.textContent=msg; el.classList.add('visible');
-}
+function showAuthError(msg) { const el=document.getElementById('authError'); el.textContent=msg; el.classList.add('visible'); }
 function clearAuthError() { document.getElementById('authError').classList.remove('visible'); }
 
 async function handleLogin() {
@@ -1256,11 +1136,8 @@ async function handleLogin() {
   const pass=document.getElementById('loginPassword').value;
   if(!email||!pass){showAuthError('Please fill in all fields');return;}
   clearAuthError();
-  try {
-    await fn().signInWithEmailAndPassword(auth(),email,pass);
-  } catch(e) {
-    showAuthError(e.code==='auth/invalid-credential'?'Invalid email or password.':e.message);
-  }
+  try { await fn().signInWithEmailAndPassword(auth(),email,pass); }
+  catch(e) { showAuthError(e.code==='auth/invalid-credential'?'Invalid email or password.':e.message); }
 }
 
 async function handleSignup() {
@@ -1276,47 +1153,46 @@ async function handleSignup() {
     const classCode = document.getElementById('classCode')?.value.trim()||'';
     const inviteToken = 'inv_'+uid+'_'+Math.random().toString(36).slice(2,8);
     const profile = {name,email,role:selectedRole,uid,inviteToken,classCode,createdAt:new Date().toISOString(),linkedChildren:[],linkedParents:[],linkedTeacher:null};
-        await setDoc(_doc()(db(),'users',uid),profile);
-    // If student with class code, find teacher and link
-    if(selectedRole==='student'&&classCode){
-      await linkToTeacherByCode(uid,classCode);
-    }
+    await fn().setDoc(fn().doc(db(),'users',uid),profile);
+    if(selectedRole==='student'&&classCode) await linkToTeacherByCode(uid,classCode);
   } catch(e) {
     showAuthError(e.code==='auth/email-already-in-use'?'This email is already registered.':e.message);
   }
 }
 
 async function linkToTeacherByCode(studentUid, code) {
-    const q = query(_collection()(db(),'users'),_where()('inviteToken','==',code));
-  const snap = await _getDocs()(q);
+  const q = fn().query(fn().collection(db(),'users'), fn().where('inviteToken','==',code));
+  const snap = await fn().getDocs(q);
   if(!snap.empty){
     const teacherDoc = snap.docs[0];
     const teacherData = teacherDoc.data();
-    // Add student to teacher's students list
     const students = teacherData.students||[];
     if(!students.includes(studentUid)) students.push(studentUid);
-    await updateDoc(_doc()(db(),'users',teacherDoc.id),{students});
-    // Set student's linked teacher
-    await updateDoc(_doc()(db(),'users',studentUid),{linkedTeacher:teacherDoc.id});
+    await fn().updateDoc(fn().doc(db(),'users',teacherDoc.id),{students});
+    await fn().updateDoc(fn().doc(db(),'users',studentUid),{linkedTeacher:teacherDoc.id});
   }
 }
 
 // ═══════════════════════════════════════════════════════
-// GOOGLE SIGN-IN
+// GOOGLE SIGN-IN — FIX #20: defer initApp until profile exists
 // ═══════════════════════════════════════════════════════
 let pendingGoogleUser = null;
 let selectedGoogleRole = 'student';
+let _waitingForGoogleRole = false; // FIX #20
 
 async function handleGoogleSignIn() {
   clearAuthError();
   try {
-        const provider = new (fn().GoogleAuthProvider)();
+    const provider = new (fn().GoogleAuthProvider)();
+    _waitingForGoogleRole = true; // FIX #20: prevent initApp from running
     const result = await fn().signInWithPopup(auth(), provider);
     const user = result.user;
-    // Check if profile already exists
-        const snap = await getDoc(_doc()(db(), 'users', user.uid));
+    const snap = await fn().getDoc(fn().doc(db(), 'users', user.uid));
     if (snap.exists()) {
-      // Existing user — onAuthStateChanged will handle the rest
+      // Existing user — let onAuthStateChanged handle it
+      _waitingForGoogleRole = false;
+      // Manually trigger initApp since onAuthStateChanged may have already fired
+      await initApp(user);
       return;
     }
     // New Google user — need to pick a role
@@ -1325,9 +1201,8 @@ async function handleGoogleSignIn() {
     document.getElementById('googleRoleOverlay').style.display = 'flex';
     document.getElementById('googleClassCodeGroup').style.display = 'block';
   } catch(e) {
-    if (e.code !== 'auth/popup-closed-by-user') {
-      showAuthError(e.message);
-    }
+    _waitingForGoogleRole = false;
+    if (e.code !== 'auth/popup-closed-by-user') showAuthError(e.message);
   }
 }
 
@@ -1350,13 +1225,13 @@ async function confirmGoogleRole() {
     linkedChildren: [], linkedParents: [], linkedTeacher: null,
     photoURL: user.photoURL || null
   };
-    await setDoc(_doc()(db(), 'users', user.uid), profile);
-  if (selectedGoogleRole === 'student' && classCode) {
-    await linkToTeacherByCode(user.uid, classCode);
-  }
+  await fn().setDoc(fn().doc(db(), 'users', user.uid), profile);
+  if (selectedGoogleRole === 'student' && classCode) await linkToTeacherByCode(user.uid, classCode);
   document.getElementById('googleRoleOverlay').style.display = 'none';
   pendingGoogleUser = null;
-  // onAuthStateChanged will now fire and load the app
+  _waitingForGoogleRole = false;
+  // Now manually init the app
+  await initApp(user);
 }
 
 async function handleForgotPassword() {
@@ -1381,14 +1256,16 @@ async function handleSignOut() {
 async function initApp(user) {
   currentUser = user;
   await loadProfile();
+  if (!userProfile) {
+    // FIX #20: Profile doesn't exist yet (Google user picking role)
+    return;
+  }
   await loadState();
 
-  // Handle invite token in URL
   const urlParams = new URLSearchParams(window.location.search);
   const inviteToken = urlParams.get('invite');
   if(inviteToken) await handleInviteFromURL(inviteToken);
 
-  // Setup UI
   document.getElementById('authScreen').classList.remove('active');
   document.getElementById('appScreen').classList.add('active');
   updateHeaderUser();
@@ -1402,7 +1279,7 @@ function updateHeaderUser() {
   const initial = (userProfile.name||'U')[0].toUpperCase();
   const avatarEl = document.getElementById('headerAvatar');
   if(userProfile.photoURL) {
-    avatarEl.innerHTML = `<img src="${userProfile.photoURL}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" referrerpolicy="no-referrer">`;
+    avatarEl.innerHTML = `<img src="${esc(userProfile.photoURL)}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" referrerpolicy="no-referrer">`;
   } else {
     avatarEl.textContent = initial;
   }
@@ -1416,33 +1293,12 @@ function buildNav() {
   const role = userProfile?.role||'student';
   const nav = document.getElementById('mainNav');
   let tabs = [];
-  if(role==='student'||role==='teacher') {
-    if(role==='student') {
-      tabs=[
-        {id:'overview',label:'📊 Overview'},
-        {id:'surahs',label:'📖 Surahs'},
-        {id:'juz',label:'📚 By Juz'},
-        {id:'heatmap',label:'📅 Revision Calendar'},
-        {id:'goals',label:'🎯 Goals'},
-        {id:'history',label:'📜 History'},
-        {id:'connect',label:'🔗 Connect'},
-      ];
-    } else {
-      tabs=[
-        {id:'teacher-overview',label:'👥 Class Overview'},
-        {id:'teacher-messages',label:'💬 Messages'},
-        {id:'teacher-invite',label:'🔗 Invite & Manage'},
-        {id:'overview',label:'📊 My Progress'},
-        {id:'surahs',label:'📖 My Surahs'},
-        {id:'heatmap',label:'📅 My Calendar'},
-      ];
-    }
+  if(role==='student') {
+    tabs=[{id:'overview',label:'📊 Overview'},{id:'surahs',label:'📖 Surahs'},{id:'juz',label:'📚 By Juz'},{id:'heatmap',label:'📅 Revision Calendar'},{id:'goals',label:'🎯 Goals'},{id:'history',label:'📜 History'},{id:'connect',label:'🔗 Connect'}];
+  } else if(role==='teacher') {
+    tabs=[{id:'teacher-overview',label:'👥 Class Overview'},{id:'teacher-messages',label:'💬 Messages'},{id:'teacher-invite',label:'🔗 Invite & Manage'},{id:'overview',label:'📊 My Progress'},{id:'surahs',label:'📖 My Surahs'},{id:'heatmap',label:'📅 My Calendar'}];
   } else {
-    tabs=[
-      {id:'parent-children',label:'👦👧 My Children'},
-      {id:'parent-messages',label:'💬 Message Teacher'},
-      {id:'parent-connect',label:'🔗 Link a Child'},
-    ];
+    tabs=[{id:'parent-children',label:'👦👧 My Children'},{id:'parent-messages',label:'💬 Message Teacher'},{id:'parent-connect',label:'🔗 Link a Child'}];
   }
   nav.innerHTML = tabs.map(t=>`<button class="tab-btn" id="navbtn-${t.id}" onclick="showTab('${t.id}')">${t.label}</button>`).join('');
 }
@@ -1492,16 +1348,21 @@ function getStats(surahs) {
   return {m,mg,r,ns:114-m-mg-r,pct:Math.round(m/114*100)};
 }
 
-function todayStr() { return new Date().toISOString().slice(0,10); }
-
+// FIX #4/#12: Fixed streak calculation — streak counts consecutive days backward from today
 function calcStreak() {
   let streak=0;
-  const today=new Date(todayStr());
+  const today=new Date();
   for(let i=0;i<365;i++){
     const d=new Date(today); d.setDate(d.getDate()-i);
-    const ds=d.toISOString().slice(0,10);
-    if(userState.heatmap[ds]) streak++; else if(i>0) break;
+    const ds=localDateStr(d);
+    if(userState.heatmap[ds]) streak++; else break; // FIX: break immediately, no free pass for today
   }
+  return streak;
+}
+
+function calcStreakFromHeatmap(heatmap){
+  let streak=0; const today=new Date();
+  for(let i=0;i<365;i++){const d=new Date(today);d.setDate(d.getDate()-i);const ds=localDateStr(d);if(heatmap[ds]) streak++;else break;}
   return streak;
 }
 
@@ -1566,34 +1427,37 @@ function renderBadges() {
     saveState();
   }
   const grid=document.getElementById('badgesSectionOverview');
-  if(grid) grid.innerHTML=BADGES.map(b=>{const e=now.includes(b.id);return`<div class="badge-card ${e?'earned':'locked'}">${e?'<div class="badge-earned-tag">✓ EARNED</div>':''}<div class="badge-emoji">${b.emoji}</div><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div></div>`;}).join('');
+  if(grid) grid.innerHTML=BADGES.map(b=>{const e=now.includes(b.id);return`<div class="badge-card ${e?'earned':'locked'}">${e?'<div class="badge-earned-tag">✓ EARNED</div>':''}<div class="badge-emoji">${b.emoji}</div><div class="badge-name">${esc(b.name)}</div><div class="badge-desc">${esc(b.desc)}</div></div>`;}).join('');
 }
 
 // ═══════════════════════════════════════════════════════
-// SURAH TABLE
+// SURAH TABLE — FIX #9: use surah number for operations, not array index
 // ═══════════════════════════════════════════════════════
 function renderTable() {
   const tbody=document.getElementById('surahTableBody');
   tbody.innerHTML='';
-  userState.surahs.forEach((s,i)=>{
+  userState.surahs.forEach((s)=>{
     const tr=document.createElement('tr');
-    tr.dataset.name=s.en.toLowerCase(); tr.dataset.status=s.status;
+    tr.dataset.name=s.en.toLowerCase(); tr.dataset.status=s.status; tr.dataset.num=s.n;
     tr.innerHTML=`
       <td><div class="surah-num">${s.n}</div></td>
-      <td><button class="surah-name-btn" onclick="openSurahViewer(${s.n})">${s.en}</button></td>
-      <td><div class="arabic-col">${s.ar}</div></td>
+      <td><button class="surah-name-btn" onclick="openSurahViewer(${s.n})">${esc(s.en)}</button></td>
+      <td><div class="arabic-col">${esc(s.ar)}</div></td>
       <td style="color:var(--text3)">${s.juz}</td>
       <td style="color:var(--text3)">${s.v}</td>
-      <td><button class="status-badge ${s.status}" onclick="cycleStatus(${i})">${STATUS_LABELS[s.status]}</button></td>
-      <td><input type="date" class="date-input" value="${s.lastRevised||''}" onchange="updateRevised(${i},this.value)"></td>
-      <td><div class="star-rating">${[1,2,3,4,5].map(x=>`<span class="star ${x<=(s.confidence||0)?'filled':''}" onclick="setConf(${i},${x})">★</span>`).join('')}</div></td>
-      <td><input type="text" class="notes-input" value="${(s.notes||'').replace(/"/g,'&quot;')}" placeholder="Add notes…" onchange="updateNotes(${i},this.value)"></td>`;
+      <td><button class="status-badge ${s.status}" onclick="cycleStatus(${s.n})">${STATUS_LABELS[s.status]}</button></td>
+      <td><input type="date" class="date-input" value="${s.lastRevised||''}" onchange="updateRevised(${s.n},this.value)"></td>
+      <td><div class="star-rating">${[1,2,3,4,5].map(x=>`<span class="star ${x<=(s.confidence||0)?'filled':''}" onclick="setConf(${s.n},${x})">★</span>`).join('')}</div></td>
+      <td><input type="text" class="notes-input" value="${esc(s.notes||'')}" placeholder="Add notes…" onchange="updateNotes(${s.n},this.value)"></td>`;
     tbody.appendChild(tr);
   });
   filterTable();
 }
 
-function cycleStatus(i) {
+// FIX #9: All these now use surah number to find the correct item
+function cycleStatus(surahNum) {
+  const i = findSurahIndex(surahNum);
+  if (i === -1) return;
   const s=userState.surahs[i];
   const prev=s.status;
   s.status=STATUS_CYCLE[(STATUS_CYCLE.indexOf(prev)+1)%STATUS_CYCLE.length];
@@ -1601,19 +1465,25 @@ function cycleStatus(i) {
   saveState(); renderTable(); renderKPIs(); renderBadges();
 }
 
-function updateRevised(i,val) {
+function updateRevised(surahNum,val) {
+  const i = findSurahIndex(surahNum);
+  if (i === -1) return;
   userState.surahs[i].lastRevised=val;
   if(val) logActivity('📅',`Revised: ${userState.surahs[i].en}`,new Date(val).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}));
   saveState();
 }
 
-function updateNotes(i,val) {
+function updateNotes(surahNum,val) {
+  const i = findSurahIndex(surahNum);
+  if (i === -1) return;
   userState.surahs[i].notes=val;
   if(val.trim()) logActivity('📝',`Note: ${userState.surahs[i].en}`,val.slice(0,60));
   saveState();
 }
 
-function setConf(i,val) {
+function setConf(surahNum,val) {
+  const i = findSurahIndex(surahNum);
+  if (i === -1) return;
   const s=userState.surahs[i];
   s.confidence=s.confidence===val?0:val;
   logActivity('⭐',`Confidence: ${s.en}`,s.confidence?`${s.confidence}/5★`:'Cleared');
@@ -1657,7 +1527,7 @@ function renderJuzBars() {
 }
 
 // ═══════════════════════════════════════════════════════
-// HEATMAP
+// HEATMAP — FIX #13: use local dates
 // ═══════════════════════════════════════════════════════
 async function logTodayRevision() {
   const today=todayStr();
@@ -1676,17 +1546,19 @@ function renderHeatmap() {
   cols.innerHTML=''; monthsEl.innerHTML='';
   const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   let colDate=new Date(start),lastMonth=-1,monthSpans=[];
+  const todayLocal = todayStr();
   for(let c=0;c<53;c++){
     const col=document.createElement('div'); col.className='heatmap-col';
     for(let r=0;r<7;r++){
       const d=new Date(colDate); d.setDate(d.getDate()+r);
-      const ds=d.toISOString().slice(0,10);
+      const ds=localDateStr(d); // FIX #13: local date
       const count=(userState.heatmap||{})[ds]||0;
       const cell=document.createElement('div'); cell.className='heatmap-cell';
       if(count>=4) cell.classList.add('l4'); else if(count===3) cell.classList.add('l3'); else if(count===2) cell.classList.add('l2'); else if(count===1) cell.classList.add('l1');
-      if(ds===todayStr()) cell.classList.add('today');
+      if(ds===todayLocal) cell.classList.add('today');
       cell.title=ds+(count?` — ${count} session${count>1?'s':''}`:'');
-      cell.onclick=()=>{userState.heatmap[ds]=(userState.heatmap[ds]||0)+1;saveState();renderHeatmap();};
+      // Capture ds in closure
+      cell.onclick=(function(dateStr){return function(){userState.heatmap[dateStr]=(userState.heatmap[dateStr]||0)+1;saveState();renderHeatmap();};})(ds);
       col.appendChild(cell);
       const m=d.getMonth(); if(m!==lastMonth&&r===0){monthSpans.push({col:c,label:months[m]});lastMonth=m;}
     }
@@ -1699,7 +1571,7 @@ function renderHeatmap() {
 }
 
 function renderDueList() {
-  const todayD=new Date(todayStr());
+  const todayD=new Date();
   const due=userState.surahs.filter(s=>{
     if(s.status!=='memorised'&&s.status!=='revision') return false;
     if(!s.lastRevised) return true;
@@ -1708,13 +1580,13 @@ function renderDueList() {
   const el=document.getElementById('dueList');
   if(!due.length){el.innerHTML='<div class="empty-state"><div class="empty-icon">✅</div><p>All caught up! No surahs overdue.</p></div>';return;}
   el.innerHTML=due.map(s=>{
-    const days=!s.lastRevised?'Never revised':`${Math.round((new Date(todayStr())-new Date(s.lastRevised))/86400000)}d ago`;
-    return`<div class="due-item"><div><div style="font-size:13px;font-weight:600">${s.n}. ${s.en} <span style="font-family:var(--arabic);color:var(--gold)">${s.ar}</span></div><div style="font-size:11px;color:var(--text3);margin-top:2px">${STATUS_LABELS[s.status]}</div></div><div style="font-size:12px;color:var(--red);font-weight:600">⚠️ ${days}</div></div>`;
+    const days=!s.lastRevised?'Never revised':`${Math.round((new Date()-new Date(s.lastRevised))/86400000)}d ago`;
+    return`<div class="due-item"><div><div style="font-size:13px;font-weight:600">${s.n}. ${esc(s.en)} <span style="font-family:var(--arabic);color:var(--gold)">${esc(s.ar)}</span></div><div style="font-size:11px;color:var(--text3);margin-top:2px">${STATUS_LABELS[s.status]}</div></div><div style="font-size:12px;color:var(--red);font-weight:600">⚠️ ${days}</div></div>`;
   }).join('');
 }
 
 // ═══════════════════════════════════════════════════════
-// GOALS
+// GOALS — FIX #11: safer goal find
 // ═══════════════════════════════════════════════════════
 function renderGoals() {
   const {m,mg,r}=getStats();
@@ -1723,7 +1595,7 @@ function renderGoals() {
     const cur=mm[g.metric]||0,pct=Math.min(100,Math.round(cur/g.target*100));
     const dl=g.deadline?`🗓️ ${new Date(g.deadline).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}`:'🗓️ No deadline set';
     return`<div class="goal-card">
-      <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:15px;font-weight:600">${g.title}</div><button class="btn btn-sm btn-secondary" onclick="openGoalModal(${g.id})">✏️ Edit</button></div>
+      <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:15px;font-weight:600">${esc(g.title)}</div><button class="btn btn-sm btn-secondary" onclick="openGoalModal(${g.id})">✏️ Edit</button></div>
       <div class="goal-nums"><div class="goal-current">${cur}</div><div class="goal-sep">/</div><div class="goal-target">${g.target}</div></div>
       <div style="font-size:12px;color:var(--text3);margin-bottom:6px">${g.metric==='memorised'?'surahs memorised':g.metric==='revision'?'in revision':'memorising'}</div>
       <div class="goal-bar"><div class="goal-bar-fill" style="width:${pct}%"></div></div>
@@ -1734,7 +1606,9 @@ function renderGoals() {
 
 function openGoalModal(id) {
   editGoalId=id;
-  const g=userState.goals.find(x=>x.id===id);
+  // FIX #11: use == for flexible matching in case of type mismatch
+  const g=userState.goals.find(x=>x.id==id);
+  if(!g) return;
   document.getElementById('goalTitle').value=g.title;
   document.getElementById('goalTarget').value=g.target;
   document.getElementById('goalDeadline').value=g.deadline||'';
@@ -1742,7 +1616,8 @@ function openGoalModal(id) {
 }
 function closeGoalModal(){document.getElementById('goalModal').classList.remove('open');}
 async function saveGoal(){
-  const g=userState.goals.find(x=>x.id===editGoalId);
+  const g=userState.goals.find(x=>x.id==editGoalId);
+  if(!g) return;
   g.title=document.getElementById('goalTitle').value;
   g.target=parseInt(document.getElementById('goalTarget').value)||g.target;
   g.deadline=document.getElementById('goalDeadline').value;
@@ -1767,7 +1642,7 @@ function renderHistory(){
     const d=new Date(h.ts),now=new Date();
     const mins=Math.floor((now-d)/60000),hrs=Math.floor((now-d)/3600000),days=Math.floor((now-d)/86400000);
     const t=mins<1?'Just now':mins<60?mins+'m ago':hrs<24?hrs+'h ago':days===1?'Yesterday':days+'d ago';
-    return`<div class="history-item"><div class="history-icon">${h.icon}</div><div class="history-content"><div class="history-action">${h.action}</div><div class="history-detail">${h.detail}</div></div><div class="history-time">${t}</div></div>`;
+    return`<div class="history-item"><div class="history-icon">${h.icon}</div><div class="history-content"><div class="history-action">${esc(h.action)}</div><div class="history-detail">${esc(h.detail)}</div></div><div class="history-time">${t}</div></div>`;
   }).join('');
 }
 
@@ -1777,11 +1652,10 @@ async function clearHistory(){
 }
 
 // ═══════════════════════════════════════════════════════
-// CONNECT TAB (STUDENT)
+// CONNECT TAB (STUDENT) — FIX #1: fn() calls
 // ═══════════════════════════════════════════════════════
 async function renderConnectTab() {
-  // Re-fetch so linked parents info is always current
-    const freshSnap=await getDoc(_doc()(db(),'users',currentUser.uid));
+  const freshSnap=await fn().getDoc(fn().doc(db(),'users',currentUser.uid));
   if(freshSnap.exists()) userProfile=freshSnap.data();
   const el=document.getElementById('connectContent');
   const inviteLink=`${window.location.origin}${window.location.pathname}?invite=${userProfile.inviteToken}`;
@@ -1791,9 +1665,9 @@ async function renderConnectTab() {
       <p style="font-size:13px;color:var(--text2);margin-bottom:12px">Send this link to your parents so they can link to your account and view your progress.</p>
       <div class="invite-box">
         <div style="font-size:12px;color:var(--text3);margin-bottom:6px">Your invite link:</div>
-        <code class="invite-link">${inviteLink}</code>
+        <code class="invite-link">${esc(inviteLink)}</code>
         <div class="invite-actions">
-          <button class="btn btn-sm btn-primary" style="width:auto;margin:0" onclick="navigator.clipboard.writeText('${inviteLink}').then(()=>showToast('📋','Copied!','Link copied to clipboard'))">📋 Copy Link</button>
+          <button class="btn btn-sm btn-primary" style="width:auto;margin:0" onclick="copyText('${inviteLink}')">📋 Copy Link</button>
           <button class="btn btn-sm btn-secondary" onclick="shareInviteLink('${inviteLink}')">📤 Share</button>
         </div>
       </div>
@@ -1810,6 +1684,10 @@ async function renderConnectTab() {
   loadLinkedTeacherInfo();
 }
 
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(()=>showToast('📋','Copied!','Link copied to clipboard'));
+}
+
 async function loadLinkedParentsInfo() {
   const el=document.getElementById('linkedParentsInfo');
   if(!el) return;
@@ -1818,14 +1696,14 @@ async function loadLinkedParentsInfo() {
     el.innerHTML=`<div class="empty-state" style="padding:16px"><div class="empty-icon" style="font-size:28px">👨‍👩‍👧</div><p>No parents linked yet. Share your invite link above with your parents.</p></div>`;
     return;
   }
-    let html='';
+  let html='';
   for(const uid of parents){
-    const snap=await getDoc(_doc()(db(),'users',uid));
+    const snap=await fn().getDoc(fn().doc(db(),'users',uid));
     if(!snap.exists()) continue;
     const p=snap.data();
     html+=`<div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(136,170,136,0.08);border-radius:10px;margin-bottom:8px">
-      <div class="student-avatar" style="width:34px;height:34px;font-size:13px;background:linear-gradient(135deg,#88aa88,#a8c8a8)">${(p.name||'P')[0]}</div>
-      <div><div style="font-size:13px;font-weight:600">${p.name}</div><div style="font-size:11px;color:var(--text3)">${p.email}</div></div>
+      <div class="student-avatar" style="width:34px;height:34px;font-size:13px;background:linear-gradient(135deg,#88aa88,#a8c8a8)">${esc((p.name||'P')[0])}</div>
+      <div><div style="font-size:13px;font-weight:600">${esc(p.name)}</div><div style="font-size:11px;color:var(--text3)">${esc(p.email)}</div></div>
       <div style="margin-left:auto;font-size:11px;color:var(--green);font-weight:600">✓ Linked</div>
     </div>`;
   }
@@ -1836,10 +1714,10 @@ async function loadLinkedTeacherInfo() {
   const el=document.getElementById('linkedTeacherInfo');
   if(!el) return;
   if(userProfile.linkedTeacher){
-        const snap=await getDoc(_doc()(db(),'users',userProfile.linkedTeacher));
+    const snap=await fn().getDoc(fn().doc(db(),'users',userProfile.linkedTeacher));
     if(snap.exists()){
       const t=snap.data();
-      el.innerHTML=`<div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(168,160,200,0.08);border-radius:10px"><div class="student-avatar" style="width:36px;height:36px;font-size:14px">${(t.name||'T')[0]}</div><div><div style="font-size:13px;font-weight:600">${t.name}</div><div style="font-size:11px;color:var(--text3)">${t.email}</div></div></div>`;
+      el.innerHTML=`<div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(168,160,200,0.08);border-radius:10px"><div class="student-avatar" style="width:36px;height:36px;font-size:14px">${esc((t.name||'T')[0])}</div><div><div style="font-size:13px;font-weight:600">${esc(t.name)}</div><div style="font-size:11px;color:var(--text3)">${esc(t.email)}</div></div></div>`;
     }
   } else {
     el.innerHTML=`<div class="empty-state" style="padding:20px"><div class="empty-icon">👩‍🏫</div><p>Not yet linked to a class. Ask your teacher for their class code when signing up.</p></div>`;
@@ -1847,37 +1725,34 @@ async function loadLinkedTeacherInfo() {
 }
 
 // ═══════════════════════════════════════════════════════
-// INVITE HANDLING
+// INVITE HANDLING — FIX #2/#17: use fn().arrayUnion properly
 // ═══════════════════════════════════════════════════════
 async function handleInviteFromURL(token) {
-  // Find user with this invite token
-    const q=query(_collection()(db(),'users'),_where()('inviteToken','==',token));
-  const snap=await _getDocs()(q);
+  const q=fn().query(fn().collection(db(),'users'), fn().where('inviteToken','==',token));
+  const snap=await fn().getDocs(q);
   if(snap.empty) return;
   const invitedUser=snap.docs[0].data();
   const role=userProfile?.role;
   if(!role) return;
 
   if(role==='parent'&&invitedUser.role==='student'){
-    // Parent linking to child
     const childUid=invitedUser.uid;
     if(!(userProfile.linkedChildren||[]).includes(childUid)){
-      await updateDoc(_doc()(db(),'users',currentUser.uid),{linkedChildren:_arrayUnion()(childUid)});
-      await updateDoc(_doc()(db(),'users',childUid),{linkedParents:_arrayUnion()(currentUser.uid)});
+      // FIX #2/#17: use real arrayUnion
+      await fn().updateDoc(fn().doc(db(),'users',currentUser.uid),{linkedChildren: fn().arrayUnion(childUid)});
+      await fn().updateDoc(fn().doc(db(),'users',childUid),{linkedParents: fn().arrayUnion(currentUser.uid)});
       userProfile.linkedChildren=[...(userProfile.linkedChildren||[]),childUid];
-      showToast('🔗',`Linked to ${invitedUser.name}!`,'You can now view their progress');
+      showToast('🔗',`Linked to ${esc(invitedUser.name)}!`,'You can now view their progress');
     }
   } else if(role==='student'&&invitedUser.role==='parent'){
-    // Student linking to parent
     const parentUid=invitedUser.uid;
     if(!(userProfile.linkedParents||[]).includes(parentUid)){
-      await updateDoc(_doc()(db(),'users',currentUser.uid),{linkedParents:_arrayUnion()(parentUid)});
-      await updateDoc(_doc()(db(),'users',parentUid),{linkedChildren:_arrayUnion()(currentUser.uid)});
+      await fn().updateDoc(fn().doc(db(),'users',currentUser.uid),{linkedParents: fn().arrayUnion(parentUid)});
+      await fn().updateDoc(fn().doc(db(),'users',parentUid),{linkedChildren: fn().arrayUnion(currentUser.uid)});
       userProfile.linkedParents=[...(userProfile.linkedParents||[]),parentUid];
-      showToast('🔗',`Linked to ${invitedUser.name}!`,'They can now view your progress');
+      showToast('🔗',`Linked to ${esc(invitedUser.name)}!`,'They can now view your progress');
     }
   }
-  // Clean URL
   window.history.replaceState({},'',window.location.pathname);
 }
 
@@ -1893,7 +1768,7 @@ function shareInviteLink(link) {
 }
 
 // ═══════════════════════════════════════════════════════
-// TEACHER DASHBOARD
+// TEACHER DASHBOARD — FIX #1/#8: fn() calls + XSS
 // ═══════════════════════════════════════════════════════
 let teacherSubTab='students';
 let compareChart2=null;
@@ -1909,12 +1784,11 @@ function setTeacherSubTab(tab,btn){
 }
 
 async function renderTeacherOverview() {
-    const grid=document.getElementById('classOverviewGrid');
+  const grid=document.getElementById('classOverviewGrid');
   const todayBar=document.getElementById('revisedTodayBar');
   grid.innerHTML='<div style="color:var(--text3);font-size:13px;padding:20px">Loading students…</div>';
 
-  // Always re-fetch teacher profile so students list is up to date
-  const freshSnap=await getDoc(_doc()(db(),'users',currentUser.uid));
+  const freshSnap=await fn().getDoc(fn().doc(db(),'users',currentUser.uid));
   if(freshSnap.exists()) userProfile=freshSnap.data();
 
   const students=userProfile.students||[];
@@ -1927,10 +1801,10 @@ async function renderTeacherOverview() {
   const today=todayStr();
   const studentData=[];
   for(const uid of students){
-    const snap=await getDoc(_doc()(db(),'users',uid));
+    const snap=await fn().getDoc(fn().doc(db(),'users',uid));
     if(!snap.exists()) continue;
     const profile=snap.data();
-    const stateSnap=await getDoc(_doc()(db(),'users',uid,'data','state'));
+    const stateSnap=await fn().getDoc(fn().doc(db(),'users',uid,'data','state'));
     const st=stateSnap.exists()?stateSnap.data():freshState();
     studentData.push({uid,profile,st});
   }
@@ -1946,10 +1820,10 @@ async function renderTeacherOverview() {
     const pct=Math.round(m/114*100);
     const didRevise=st.heatmap&&st.heatmap[today];
     if(didRevise) revisedToday++;
-    return`<div class="student-card" onclick="openStudentDetail('${uid}')">
+    return`<div class="student-card" onclick="openStudentDetail('${esc(uid)}')">
       <div class="student-card-header">
-        <div class="student-avatar">${(profile.name||'S')[0].toUpperCase()}</div>
-        <div><div class="student-name">${profile.name}</div><div class="student-email">${profile.email}</div></div>
+        <div class="student-avatar">${esc((profile.name||'S')[0].toUpperCase())}</div>
+        <div><div class="student-name">${esc(profile.name)}</div><div class="student-email">${esc(profile.email)}</div></div>
         <div class="revised-today-dot ${didRevise?'yes':'no'}" title="${didRevise?'Revised today':'Not yet today'}" style="margin-left:auto"></div>
       </div>
       <div class="student-mini-stats">
@@ -1971,7 +1845,7 @@ async function renderTeacherOverview() {
 }
 
 function renderTeacherAlerts(studentData) {
-  const todayD=new Date(todayStr());
+  const todayD=new Date();
   const el=document.getElementById('alertsList');
   let html='';
   (studentData||window._teacherStudentData||[]).forEach(({profile,st})=>{
@@ -1980,7 +1854,7 @@ function renderTeacherAlerts(studentData) {
       const days=!x.lastRevised?'Never revised':`${Math.round((todayD-new Date(x.lastRevised))/86400000)}d ago`;
       html+=`<div class="alert-card" style="margin-bottom:10px">
         <div class="alert-info">
-          <div class="alert-name">${profile.name} — ${x.en} <span style="font-family:var(--arabic);color:var(--gold)">${x.ar}</span></div>
+          <div class="alert-name">${esc(profile.name)} — ${esc(x.en)} <span style="font-family:var(--arabic);color:var(--gold)">${esc(x.ar)}</span></div>
           <div class="alert-detail">${STATUS_LABELS[x.status]}</div>
         </div>
         <div class="alert-days">⚠️ ${days}</div>
@@ -2022,60 +1896,69 @@ function openStudentDetail(uid) {
       <div style="text-align:center;background:rgba(168,160,200,0.1);border-radius:10px;padding:12px"><div style="font-size:22px;font-weight:700;color:var(--blue)">${pct}%</div><div style="font-size:11px;color:var(--text3)">Complete</div></div>
     </div>
     <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px">Recent Activity</div>
-    <div style="max-height:200px;overflow-y:auto">${(st.history||[]).slice(0,10).map(h=>`<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><span>${h.icon}</span><div><div style="font-size:12px;font-weight:500">${h.action}</div><div style="font-size:11px;color:var(--text3)">${h.detail}</div></div></div>`).join('')||'<div style="font-size:13px;color:var(--text3);padding:10px 0">No activity yet</div>'}</div>`;
+    <div style="max-height:200px;overflow-y:auto">${(st.history||[]).slice(0,10).map(h=>`<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><span>${h.icon}</span><div><div style="font-size:12px;font-weight:500">${esc(h.action)}</div><div style="font-size:11px;color:var(--text3)">${esc(h.detail)}</div></div></div>`).join('')||'<div style="font-size:13px;color:var(--text3);padding:10px 0">No activity yet</div>'}</div>`;
   document.getElementById('studentDetailModal').classList.add('open');
 }
 function closeStudentModal(){document.getElementById('studentDetailModal').classList.remove('open');}
 document.getElementById('studentDetailModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeStudentModal();});
 
 // ═══════════════════════════════════════════════════════
-// TEACHER MESSAGES
+// TEACHER MESSAGES — FIX #5: filter properly by parent
 // ═══════════════════════════════════════════════════════
 async function renderTeacherMessages() {
-    const el=document.getElementById('teacherMessagesContent');
+  const el=document.getElementById('teacherMessagesContent');
+  try {
+    const messagesRef=fn().collection(db(),'messages');
+    const q=fn().query(messagesRef, fn().where('teacherId','==',currentUser.uid), fn().orderBy('createdAt','asc'));
+    const snap=await fn().getDocs(q);
 
-  // Get all parents who have messaged
-  const messagesRef=_collection()(db(),'messages');
-  const q=_query()(messagesRef,_where()('teacherId','==',currentUser.uid),_orderBy()('createdAt','asc'));
-  const snap=await _getDocs()(q);
+    const threads={};
+    snap.forEach(d=>{
+      const m={id:d.id,...d.data()};
+      // FIX #5: Group by the OTHER party (parent), not just sender
+      const parentId = m.fromParent ? m.senderId : m.recipientId;
+      if(!threads[parentId]) threads[parentId]=[];
+      threads[parentId].push(m);
+    });
 
-  // Group by parent
-  const threads={};
-  snap.forEach(d=>{const m={id:d.id,...d.data()};const key=m.fromParent?m.senderId:m.recipientId;if(!threads[key]) threads[key]=[];threads[key].push(m);});
+    if(!Object.keys(threads).length){
+      el.innerHTML=`<div class="card"><div class="empty-state"><div class="empty-icon">💬</div><p>No messages yet from parents.</p></div></div>`;
+      return;
+    }
 
-  if(!Object.keys(threads).length){
-    el.innerHTML=`<div class="card"><div class="empty-state"><div class="empty-icon">💬</div><p>No messages yet from parents.</p></div></div>`;
-    return;
-  }
+    const threadIds=Object.keys(threads);
+    el.innerHTML='';
 
-  const threadIds=Object.keys(threads);
-  el.innerHTML='';
-
-  for(const parentId of threadIds){
-    const pSnap=await _getDocs()(query(_collection()(db(),'users'),_where()('uid','==',parentId)));
-    const pName=pSnap.empty?'Parent':pSnap.docs[0].data().name;
-    const msgs=threads[parentId];
-    const div=document.createElement('div');
-    div.className='card'; div.style.marginBottom='16px';
-    div.innerHTML=`
-      <div class="card-title">💬 ${pName}</div>
-      <div class="message-thread" id="thread-${parentId}">
-        ${msgs.map(m=>`<div class="message-bubble ${m.fromParent?'received':'sent'}">${m.text}<div class="message-meta">${new Date(m.createdAt?.toDate?m.createdAt.toDate():m.createdAt).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</div></div>`).join('')}
-      </div>
-      <div class="message-compose">
-        <input type="text" placeholder="Reply to ${pName}…" id="reply-${parentId}" onkeydown="if(event.key==='Enter')sendTeacherReply('${parentId}')">
-        <button class="btn btn-primary btn-sm" style="width:auto;margin:0" onclick="sendTeacherReply('${parentId}')">Send</button>
-      </div>`;
-    el.appendChild(div);
+    for(const parentId of threadIds){
+      const pSnap=await fn().getDoc(fn().doc(db(),'users',parentId));
+      const pName=pSnap.exists()?pSnap.data().name:'Parent';
+      const msgs=threads[parentId];
+      const div=document.createElement('div');
+      div.className='card'; div.style.marginBottom='16px';
+      div.innerHTML=`
+        <div class="card-title">💬 ${esc(pName)}</div>
+        <div class="message-thread" id="thread-${esc(parentId)}">
+          ${msgs.map(m=>`<div class="message-bubble ${m.fromParent?'received':'sent'}">${esc(m.text)}<div class="message-meta">${new Date(m.createdAt?.toDate?m.createdAt.toDate():m.createdAt).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</div></div>`).join('')}
+        </div>
+        <div class="message-compose">
+          <input type="text" placeholder="Reply to ${esc(pName)}…" id="reply-${parentId}" onkeydown="if(event.key==='Enter')sendTeacherReply('${esc(parentId)}')">
+          <button class="btn btn-primary btn-sm" style="width:auto;margin:0" onclick="sendTeacherReply('${esc(parentId)}')">Send</button>
+        </div>`;
+      el.appendChild(div);
+    }
+  } catch(e) {
+    // FIX #16: Handle missing composite index gracefully
+    console.error('Messages query error (may need composite index):', e);
+    el.innerHTML=`<div class="card"><div class="empty-state"><div class="empty-icon">⚠️</div><p>Could not load messages. If this is the first time, a Firestore index may need to be created. Check the browser console for a link to create it.</p></div></div>`;
   }
 }
 
 async function sendTeacherReply(parentId) {
   const input=document.getElementById('reply-'+parentId);
   const text=input.value.trim(); if(!text) return;
-    await _addDoc()(_collection()(db(),'messages'),{
+  await fn().addDoc(fn().collection(db(),'messages'),{
     teacherId:currentUser.uid,senderId:currentUser.uid,recipientId:parentId,
-    text,fromParent:false,createdAt:_serverTimestamp()()
+    text,fromParent:false,createdAt:fn().serverTimestamp()
   });
   input.value='';
   renderTeacherMessages();
@@ -2085,8 +1968,7 @@ async function sendTeacherReply(parentId) {
 // TEACHER INVITE
 // ═══════════════════════════════════════════════════════
 async function renderTeacherInvite() {
-  // Re-fetch so enrolled students list is always current
-    const freshSnap=await getDoc(_doc()(db(),'users',currentUser.uid));
+  const freshSnap=await fn().getDoc(fn().doc(db(),'users',currentUser.uid));
   if(freshSnap.exists()) userProfile=freshSnap.data();
   const classLink=`${window.location.origin}${window.location.pathname}?invite=${userProfile.inviteToken}`;
   const el=document.getElementById('teacherInviteContent');
@@ -2097,12 +1979,12 @@ async function renderTeacherInvite() {
       <p style="font-size:13px;color:var(--text2);margin-bottom:12px">Share this link or code with students so they can join your class when signing up.</p>
       <div class="invite-box">
         <div style="font-size:12px;color:var(--text3);margin-bottom:4px">Class invite link:</div>
-        <code class="invite-link">${classLink}</code>
+        <code class="invite-link">${esc(classLink)}</code>
         <div style="font-size:12px;color:var(--text3);margin:8px 0 4px">Or share just the code:</div>
-        <code class="invite-link" style="font-size:14px;font-weight:700;letter-spacing:2px">${userProfile.inviteToken}</code>
+        <code class="invite-link" style="font-size:14px;font-weight:700;letter-spacing:2px">${esc(userProfile.inviteToken)}</code>
         <div class="invite-actions">
-          <button class="btn btn-sm btn-primary" style="width:auto;margin:0" onclick="navigator.clipboard.writeText('${classLink}').then(()=>showToast('📋','Copied!','Share this with your students'))">📋 Copy Link</button>
-          <button class="btn btn-sm btn-secondary" onclick="navigator.clipboard.writeText('${userProfile.inviteToken}').then(()=>showToast('📋','Code copied!',''))">Copy Code Only</button>
+          <button class="btn btn-sm btn-primary" style="width:auto;margin:0" onclick="copyText('${classLink}')">📋 Copy Link</button>
+          <button class="btn btn-sm btn-secondary" onclick="copyText('${userProfile.inviteToken}')">Copy Code Only</button>
         </div>
       </div>
     </div>
@@ -2118,14 +2000,14 @@ async function loadEnrolledStudents() {
   if(!el) return;
   const students=userProfile.students||[];
   if(!students.length){el.innerHTML='<div class="empty-state" style="padding:20px"><div class="empty-icon">👥</div><p>No students enrolled yet.</p></div>';return;}
-    let html='';
+  let html='';
   for(const uid of students){
-    const snap=await getDoc(_doc()(db(),'users',uid));
+    const snap=await fn().getDoc(fn().doc(db(),'users',uid));
     if(!snap.exists()) continue;
     const p=snap.data();
     html+=`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
-      <div class="student-avatar" style="width:34px;height:34px;font-size:13px">${(p.name||'S')[0]}</div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">${p.name}</div><div style="font-size:11px;color:var(--text3)">${p.email}</div></div>
+      <div class="student-avatar" style="width:34px;height:34px;font-size:13px">${esc((p.name||'S')[0])}</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">${esc(p.name)}</div><div style="font-size:11px;color:var(--text3)">${esc(p.email)}</div></div>
     </div>`;
   }
   el.innerHTML=html;
@@ -2136,8 +2018,7 @@ async function loadEnrolledStudents() {
 // ═══════════════════════════════════════════════════════
 async function renderParentChildren() {
   const el=document.getElementById('parentChildrenContent');
-  // Re-fetch so linkedChildren is always current
-    const freshSnap=await getDoc(_doc()(db(),'users',currentUser.uid));
+  const freshSnap=await fn().getDoc(fn().doc(db(),'users',currentUser.uid));
   if(freshSnap.exists()) userProfile=freshSnap.data();
   const children=userProfile.linkedChildren||[];
   if(!children.length){
@@ -2147,25 +2028,24 @@ async function renderParentChildren() {
   el.innerHTML='<div class="children-grid" id="childrenGrid"></div>';
   const grid=document.getElementById('childrenGrid');
   for(const uid of children){
-    const snap=await getDoc(_doc()(db(),'users',uid));
+    const snap=await fn().getDoc(fn().doc(db(),'users',uid));
     if(!snap.exists()) continue;
     const p=snap.data();
-    const stSnap=await getDoc(_doc()(db(),'users',uid,'data','state'));
+    const stSnap=await fn().getDoc(fn().doc(db(),'users',uid,'data','state'));
     const st=stSnap.exists()?stSnap.data():freshState();
     const s=st.surahs||[];
     const m=s.filter(x=>x.status==='memorised').length;
     const mg=s.filter(x=>x.status==='memorising').length;
-    const r=s.filter(x=>x.status==='revision').length;
     const pct=Math.round(m/114*100);
     const streak=calcStreakFromHeatmap(st.heatmap||{});
-    const todayD=new Date(todayStr());
+    const todayD=new Date();
     const due=s.filter(x=>(x.status==='memorised'||x.status==='revision')&&(!x.lastRevised||(todayD-new Date(x.lastRevised))/86400000>=7));
     const div=document.createElement('div');
     div.className='child-card';
     div.innerHTML=`
       <div class="child-header">
-        <div class="child-avatar">${(p.name||'S')[0]}</div>
-        <div><div style="font-size:16px;font-weight:700">${p.name}</div><div style="font-size:12px;color:var(--text3)">${p.email}</div></div>
+        <div class="child-avatar">${esc((p.name||'S')[0])}</div>
+        <div><div style="font-size:16px;font-weight:700">${esc(p.name)}</div><div style="font-size:12px;color:var(--text3)">${esc(p.email)}</div></div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">
         <div style="text-align:center;background:rgba(136,170,136,0.1);border-radius:8px;padding:10px"><div style="font-size:20px;font-weight:700;color:var(--green)">${m}</div><div style="font-size:10px;color:var(--text3)">Memorised</div></div>
@@ -2181,22 +2061,15 @@ async function renderParentChildren() {
   }
 }
 
-function calcStreakFromHeatmap(heatmap){
-  let streak=0; const today=new Date(todayStr());
-  for(let i=0;i<365;i++){const d=new Date(today);d.setDate(d.getDate()-i);const ds=d.toISOString().slice(0,10);if(heatmap[ds]) streak++;else if(i>0) break;}
-  return streak;
-}
-
 // ═══════════════════════════════════════════════════════
-// PARENT MESSAGES
+// PARENT MESSAGES — FIX #5: improved query
 // ═══════════════════════════════════════════════════════
 async function renderParentMessages() {
   const el=document.getElementById('parentMessagesContent');
-  // Find teacher (via child's linkedTeacher)
   const children=userProfile.linkedChildren||[];
   let teacherId=null;
   if(children.length){
-        const childSnap=await getDoc(_doc()(db(),'users',children[0]));
+    const childSnap=await fn().getDoc(fn().doc(db(),'users',children[0]));
     if(childSnap.exists()) teacherId=childSnap.data().linkedTeacher;
   }
 
@@ -2205,34 +2078,40 @@ async function renderParentMessages() {
     return;
   }
 
-    const q=query(_collection()(db(),'messages'),_where()('teacherId','==',teacherId),_where()('senderId','in',[currentUser.uid,teacherId]),_orderBy()('createdAt','asc'));
-  const snap=await _getDocs()(q);
-  const msgs=[];
-  snap.forEach(d=>msgs.push({id:d.id,...d.data()}));
-  const filtered=msgs.filter(m=>m.senderId===currentUser.uid||m.recipientId===currentUser.uid);
+  try {
+    // FIX #5: Query all messages for this teacher, then filter client-side for this parent
+    const q=fn().query(fn().collection(db(),'messages'), fn().where('teacherId','==',teacherId), fn().orderBy('createdAt','asc'));
+    const snap=await fn().getDocs(q);
+    const msgs=[];
+    snap.forEach(d=>msgs.push({id:d.id,...d.data()}));
+    // FIX #5: Only show messages where this parent is sender OR recipient
+    const filtered=msgs.filter(m=>m.senderId===currentUser.uid||m.recipientId===currentUser.uid);
 
-  el.innerHTML=`
-    <div class="card">
-      <div class="card-title">💬 Message to Teacher</div>
-      <div class="message-thread" id="parentThread">
-        ${filtered.map(m=>`<div class="message-bubble ${m.senderId===currentUser.uid?'sent':'received'}">${m.text}<div class="message-meta">${new Date(m.createdAt?.toDate?m.createdAt.toDate():m.createdAt).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</div></div>`).join('')||'<div style="text-align:center;color:var(--text3);font-size:13px;padding:20px">No messages yet. Start the conversation!</div>'}
-      </div>
-      <div class="message-compose">
-        <input type="text" placeholder="Type a message…" id="parentMsgInput" onkeydown="if(event.key==='Enter')sendParentMessage('${teacherId}')">
-        <button class="btn btn-primary btn-sm" style="width:auto;margin:0" onclick="sendParentMessage('${teacherId}')">Send</button>
-      </div>
-    </div>`;
-  // Scroll to bottom
-  const thread=document.getElementById('parentThread');
-  if(thread) setTimeout(()=>thread.scrollTop=thread.scrollHeight,100);
+    el.innerHTML=`
+      <div class="card">
+        <div class="card-title">💬 Message to Teacher</div>
+        <div class="message-thread" id="parentThread">
+          ${filtered.map(m=>`<div class="message-bubble ${m.senderId===currentUser.uid?'sent':'received'}">${esc(m.text)}<div class="message-meta">${new Date(m.createdAt?.toDate?m.createdAt.toDate():m.createdAt).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}</div></div>`).join('')||'<div style="text-align:center;color:var(--text3);font-size:13px;padding:20px">No messages yet. Start the conversation!</div>'}
+        </div>
+        <div class="message-compose">
+          <input type="text" placeholder="Type a message…" id="parentMsgInput" onkeydown="if(event.key==='Enter')sendParentMessage('${esc(teacherId)}')">
+          <button class="btn btn-primary btn-sm" style="width:auto;margin:0" onclick="sendParentMessage('${esc(teacherId)}')">Send</button>
+        </div>
+      </div>`;
+    const thread=document.getElementById('parentThread');
+    if(thread) setTimeout(()=>thread.scrollTop=thread.scrollHeight,100);
+  } catch(e) {
+    console.error('Parent messages query error (may need composite index):', e);
+    el.innerHTML=`<div class="card"><div class="empty-state"><div class="empty-icon">⚠️</div><p>Could not load messages. A Firestore composite index may be needed. Check browser console for details.</p></div></div>`;
+  }
 }
 
 async function sendParentMessage(teacherId){
   const input=document.getElementById('parentMsgInput');
   const text=input.value.trim(); if(!text) return;
-    await _addDoc()(_collection()(db(),'messages'),{
+  await fn().addDoc(fn().collection(db(),'messages'),{
     teacherId,senderId:currentUser.uid,recipientId:teacherId,
-    text,fromParent:true,createdAt:_serverTimestamp()()
+    text,fromParent:true,createdAt:fn().serverTimestamp()
   });
   input.value='';
   renderParentMessages();
@@ -2242,8 +2121,7 @@ async function sendParentMessage(teacherId){
 // PARENT CONNECT
 // ═══════════════════════════════════════════════════════
 async function renderParentConnect(){
-  // Re-fetch so profile is current
-    const freshSnap=await getDoc(_doc()(db(),'users',currentUser.uid));
+  const freshSnap=await fn().getDoc(fn().doc(db(),'users',currentUser.uid));
   if(freshSnap.exists()) userProfile=freshSnap.data();
   const el=document.getElementById('parentConnectContent');
   const myLink=`${window.location.origin}${window.location.pathname}?invite=${userProfile.inviteToken}`;
@@ -2252,9 +2130,9 @@ async function renderParentConnect(){
       <div class="card-title">Option 1 — Share YOUR link with your child</div>
       <p style="font-size:13px;color:var(--text2);margin-bottom:12px">Your child opens this link while signed in to link themselves to your account.</p>
       <div class="invite-box">
-        <code class="invite-link">${myLink}</code>
+        <code class="invite-link">${esc(myLink)}</code>
         <div class="invite-actions">
-          <button class="btn btn-sm btn-primary" style="width:auto;margin:0" onclick="navigator.clipboard.writeText('${myLink}').then(()=>showToast('📋','Copied!',''))">📋 Copy</button>
+          <button class="btn btn-sm btn-primary" style="width:auto;margin:0" onclick="copyText('${myLink}')">📋 Copy</button>
           <button class="btn btn-sm btn-secondary" onclick="shareInviteLink('${myLink}')">📤 Share</button>
         </div>
       </div>
@@ -2278,7 +2156,7 @@ async function linkChildFromPaste(){
 }
 
 // ═══════════════════════════════════════════════════════
-// SURAH VIEWER
+// SURAH VIEWER — FIX #15: stale fetch protection
 // ═══════════════════════════════════════════════════════
 async function openSurahViewer(num){
   const sd=SURAHS.find(s=>s.n===num); if(!sd) return;
@@ -2292,22 +2170,31 @@ async function openSurahViewer(num){
   document.getElementById('btnArabicOnly').classList.add('active');
   document.getElementById('btnWithTrans').classList.remove('active');
   document.getElementById('svOverlay').classList.add('open');
-  document.getElementById('svVerses').innerHTML=`<div class="sv-loading"><div class="sv-spinner"></div>Loading ${sd.en}…</div>`;
+  document.getElementById('svVerses').innerHTML=`<div class="sv-loading"><div class="sv-spinner"></div>Loading ${esc(sd.en)}…</div>`;
+
+  // FIX #15: Track fetch ID to prevent stale responses
+  const fetchId = ++currentSurahFetchId;
+
   try {
     if(verseCache[num]){renderVerses(verseCache[num]);return;}
     const [arRes,trRes]=await Promise.all([fetch(`https://api.alquran.cloud/v1/surah/${num}`),fetch(`https://api.alquran.cloud/v1/surah/${num}/en.sahih`)]);
+    // FIX #15: Check if user opened a different surah while loading
+    if (fetchId !== currentSurahFetchId) return;
     if(!arRes.ok) throw new Error();
     const arData=await arRes.json(); let tr=[];
     if(trRes.ok){const td=await trRes.json();tr=td.data.ayahs.map(a=>a.text);}
     verseCache[num]=arData.data.ayahs.map((a,i)=>({...a,translation:tr[i]||''}));
+    if (fetchId !== currentSurahFetchId) return; // check again after parsing
     renderVerses(verseCache[num]);
   } catch {
-    document.getElementById('svVerses').innerHTML='<div class="sv-loading"><div style="font-size:32px;margin-bottom:12px">🌐</div><div>Internet connection required to load verses.</div></div>';
+    if (fetchId === currentSurahFetchId) {
+      document.getElementById('svVerses').innerHTML='<div class="sv-loading"><div style="font-size:32px;margin-bottom:12px">🌐</div><div>Internet connection required to load verses.</div></div>';
+    }
   }
 }
 
 function renderVerses(ayahs){
-  document.getElementById('svVerses').innerHTML=ayahs.map(a=>`<div class="sv-verse"><div class="sv-verse-top"><div class="sv-vnum">${a.numberInSurah}</div><div class="sv-varabic">${a.text}</div></div>${a.translation?`<div class="sv-vtranslation ${verseMode==='translation'?'show':''}">${a.translation}</div>`:''}</div>`).join('');
+  document.getElementById('svVerses').innerHTML=ayahs.map(a=>`<div class="sv-verse"><div class="sv-verse-top"><div class="sv-vnum">${a.numberInSurah}</div><div class="sv-varabic">${a.text}</div></div>${a.translation?`<div class="sv-vtranslation ${verseMode==='translation'?'show':''}">${esc(a.translation)}</div>`:''}</div>`).join('');
 }
 
 function setVerseMode(mode){
@@ -2334,11 +2221,11 @@ function toggleTheme(){
 }
 
 // ═══════════════════════════════════════════════════════
-// TOAST
+// TOAST — FIX #8: sanitized
 // ═══════════════════════════════════════════════════════
 function showToast(icon,title,desc){
   const t=document.createElement('div'); t.className='toast';
-  t.innerHTML=`<div style="font-size:24px">${icon}</div><div><div style="font-size:14px;font-weight:600;color:var(--text)">${title}</div><div style="font-size:12px;color:var(--text3)">${desc}</div></div>`;
+  t.innerHTML=`<div style="font-size:24px">${icon}</div><div><div style="font-size:14px;font-weight:600;color:var(--text)">${esc(title)}</div><div style="font-size:12px;color:var(--text3)">${esc(desc)}</div></div>`;
   document.body.appendChild(t);
   setTimeout(()=>t.classList.add('show'),30);
   setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),400);},3500);
@@ -2354,15 +2241,11 @@ function hideLoading(){
 }
 
 // ═══════════════════════════════════════════════════════
-// INIT
+// INIT — FIX #3: prevent double startAuthListener
 // ═══════════════════════════════════════════════════════
-
-// Immediately check if config looks unconfigured
 (function checkConfig() {
-  // Wait a tick for module to run, then check
   setTimeout(() => {
     const overlay = document.getElementById('loadingOverlay');
-    // If still loading after 1 second, show a config helper
     if(overlay && !overlay.classList.contains('hide') && overlay.style.display !== 'none') {
       const inner = overlay.querySelector('div');
       if(inner) {
@@ -2382,14 +2265,10 @@ function hideLoading(){
       }
     }
   }, 1000);
-
-  // Show hint after 4 seconds if still stuck
   setTimeout(() => {
     const hint = document.getElementById('configHint');
     const overlay = document.getElementById('loadingOverlay');
-    if(hint && overlay && !overlay.classList.contains('hide')) {
-      hint.style.display = 'block';
-    }
+    if(hint && overlay && !overlay.classList.contains('hide')) hint.style.display = 'block';
   }, 4000);
 })();
 
@@ -2398,8 +2277,13 @@ if(localStorage.getItem('qtTheme')==='dark'){
   document.getElementById('themeKnob').textContent='☀️';
 }
 
+// FIX #3: single flag to prevent double init
+let __authListenerStarted = false;
+
 function startAuthListener() {
-  // Show config error if Firebase failed to init
+  if (__authListenerStarted) return; // FIX #3: prevent double registration
+  __authListenerStarted = true;
+
   if(window.__firebaseError || !window.__firebaseReady) {
     document.getElementById('loadingOverlay').style.display = 'none';
     document.getElementById('authScreen').classList.add('active');
@@ -2411,7 +2295,6 @@ function startAuthListener() {
     return;
   }
 
-  // Set a 10-second timeout fallback in case onAuthStateChanged never fires
   const timeout = setTimeout(() => {
     if(document.getElementById('loadingOverlay').style.display !== 'none' &&
        !document.getElementById('loadingOverlay').classList.contains('hide')) {
@@ -2426,6 +2309,8 @@ function startAuthListener() {
   fn().onAuthStateChanged(auth(), async user => {
     clearTimeout(timeout);
     if(user) {
+      // FIX #20: Don't init if waiting for Google role selection
+      if (_waitingForGoogleRole) return;
       stopAuthParticles();
       await initApp(user);
     } else {
@@ -2437,24 +2322,16 @@ function startAuthListener() {
   });
 }
 
-// Listen for firebaseReady event, with a polling fallback
-// in case the event fired before this script ran
+// Listen for firebaseReady event
 document.addEventListener('firebaseReady', startAuthListener);
 
-// Fallback: if module already fired before listener was attached, poll for it
+// Fallback polling — FIX #3: uses same flag
 const _fbPoll = setInterval(() => {
   if(window.__firebaseReady !== undefined) {
     clearInterval(_fbPoll);
-    // Only run if startAuthListener hasn't been triggered via event yet
-    if(!window.__authListenerStarted) {
-      window.__authListenerStarted = true;
-      startAuthListener();
-    }
+    startAuthListener(); // Will no-op if already started due to flag
   }
 }, 100);
-
-// Mark listener as started when event fires to avoid double-run
-document.addEventListener('firebaseReady', () => { window.__authListenerStarted = true; });
 
 // Keyboard listeners
 document.addEventListener('keydown',e=>{
