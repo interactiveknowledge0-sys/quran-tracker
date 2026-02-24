@@ -24,12 +24,12 @@ import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, getDocs, quer
 // 🔧 REPLACE WITH YOUR FIREBASE CONFIG
 // ════════════════════════════════════
 const firebaseConfig = {
-  apiKey: "AIzaSyBCcxh41j0dkoUOAQ2CJB0mRkiSzStrxkw",
-  authDomain: "quran-tracker-3c491.firebaseapp.com",
-  projectId: "quran-tracker-3c491",
-  storageBucket: "quran-tracker-3c491.firebasestorage.app",
-  messagingSenderId: "822600976467",
-  appId: "1:822600976467:web:257dd6497cf55dfb4c9ea6"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 // ════════════════════════════════════
 
@@ -597,7 +597,7 @@ body.dark-mode .notes-input:focus { background: var(--border) !important; }
           </div>
         </div>
       </div>
-      <div class="form-group" id="classCodeGroup" style="display:none">
+      <div class="form-group" id="classCodeGroup">
         <label class="form-label">Class Code (optional — join teacher's class)</label>
         <input type="text" class="form-input" id="classCode" placeholder="e.g. ABC123">
       </div>
@@ -1011,7 +1011,7 @@ function selectRole(role, el) {
   selectedRole = role;
   document.querySelectorAll('.role-card').forEach(c=>c.classList.remove('selected'));
   el.classList.add('selected');
-  document.getElementById('classCodeGroup').style.display = role==='student'?'block':'none';
+  document.getElementById('classCodeGroup').style.display = (role==='student')?'block':'none';
 }
 
 function showAuthError(msg) {
@@ -1594,6 +1594,10 @@ async function renderTeacherOverview() {
   const todayBar=document.getElementById('revisedTodayBar');
   grid.innerHTML='<div style="color:var(--text3);font-size:13px;padding:20px">Loading students…</div>';
 
+  // Always re-fetch teacher profile so students list is up to date
+  const freshSnap=await getDoc(doc(db(),'users',currentUser.uid));
+  if(freshSnap.exists()) userProfile=freshSnap.data();
+
   const students=userProfile.students||[];
   if(!students.length){
     grid.innerHTML='<div class="empty-state"><div class="empty-icon">👥</div><p>No students yet. Share your class code to invite students.</p></div>';
@@ -1763,7 +1767,11 @@ async function sendTeacherReply(parentId) {
 // ═══════════════════════════════════════════════════════
 // TEACHER INVITE
 // ═══════════════════════════════════════════════════════
-function renderTeacherInvite() {
+async function renderTeacherInvite() {
+  // Re-fetch so enrolled students list is always current
+  const {doc,getDoc}=fn();
+  const freshSnap=await getDoc(doc(db(),'users',currentUser.uid));
+  if(freshSnap.exists()) userProfile=freshSnap.data();
   const classLink=`${window.location.origin}${window.location.pathname}?invite=${userProfile.inviteToken}`;
   const el=document.getElementById('teacherInviteContent');
   const students=userProfile.students||[];
