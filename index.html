@@ -24,12 +24,13 @@ import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, getDocs, quer
 // 🔧 REPLACE WITH YOUR FIREBASE CONFIG
 // ════════════════════════════════════
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBCcxh41j0dkoUOAQ2CJB0mRkiSzStrxkw",
+  authDomain: "quran-tracker-3c491.firebaseapp.com",
+  projectId: "quran-tracker-3c491",
+  storageBucket: "quran-tracker-3c491.firebasestorage.app",
+  messagingSenderId: "822600976467",
+  appId: "1:822600976467:web:257dd6497cf55dfb4c9ea6",
+  measurementId: "G-TGTYNGWB4T"
 };
 // ════════════════════════════════════
 
@@ -2212,6 +2213,43 @@ function hideLoading(){
 // ═══════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════
+
+// Immediately check if config looks unconfigured
+(function checkConfig() {
+  // Wait a tick for module to run, then check
+  setTimeout(() => {
+    const overlay = document.getElementById('loadingOverlay');
+    // If still loading after 1 second, show a config helper
+    if(overlay && !overlay.classList.contains('hide') && overlay.style.display !== 'none') {
+      const inner = overlay.querySelector('div');
+      if(inner) {
+        inner.innerHTML = `
+          <div style="font-size:36px;margin-bottom:14px">☪️</div>
+          <div class="loading-spinner"></div>
+          <div style="font-size:13px;color:var(--text3);margin-top:14px">Loading Quran Tracker…</div>
+          <div id="configHint" style="display:none;margin-top:20px;max-width:320px;background:rgba(208,120,136,0.1);border:1px solid rgba(208,120,136,0.3);border-radius:12px;padding:16px;font-size:12px;color:#c06070;line-height:1.6;text-align:left">
+            <strong>⚠️ Still loading?</strong><br>
+            Check these common causes:<br>
+            1. Firebase config values are still placeholders<br>
+            2. Firebase project not set up correctly<br>
+            3. Authentication not enabled in Firebase<br>
+            4. Firestore database not created<br><br>
+            Open browser DevTools (F12) → Console tab to see the exact error.
+          </div>`;
+      }
+    }
+  }, 1000);
+
+  // Show hint after 4 seconds if still stuck
+  setTimeout(() => {
+    const hint = document.getElementById('configHint');
+    const overlay = document.getElementById('loadingOverlay');
+    if(hint && overlay && !overlay.classList.contains('hide')) {
+      hint.style.display = 'block';
+    }
+  }, 4000);
+})();
+
 if(localStorage.getItem('qtTheme')==='dark'){
   document.body.classList.add('dark-mode');
   document.getElementById('themeKnob').textContent='☀️';
