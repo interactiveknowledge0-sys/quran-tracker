@@ -1487,7 +1487,11 @@ async function clearHistory(){
 // ═══════════════════════════════════════════════════════
 // CONNECT TAB (STUDENT)
 // ═══════════════════════════════════════════════════════
-function renderConnectTab() {
+async function renderConnectTab() {
+  // Re-fetch so linked parents info is always current
+  const {doc,getDoc}=fn();
+  const freshSnap=await getDoc(doc(db(),'users',currentUser.uid));
+  if(freshSnap.exists()) userProfile=freshSnap.data();
   const el=document.getElementById('connectContent');
   const inviteLink=`${window.location.origin}${window.location.pathname}?invite=${userProfile.inviteToken}`;
   el.innerHTML=`
@@ -1503,11 +1507,39 @@ function renderConnectTab() {
         </div>
       </div>
     </div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title">👨‍👩‍👧 Linked Parents</div>
+      <div id="linkedParentsInfo"></div>
+    </div>
     <div class="card">
       <div class="card-title">👩‍🏫 Linked Teacher</div>
       <div id="linkedTeacherInfo"></div>
     </div>`;
+  loadLinkedParentsInfo();
   loadLinkedTeacherInfo();
+}
+
+async function loadLinkedParentsInfo() {
+  const el=document.getElementById('linkedParentsInfo');
+  if(!el) return;
+  const parents=userProfile.linkedParents||[];
+  if(!parents.length){
+    el.innerHTML=`<div class="empty-state" style="padding:16px"><div class="empty-icon" style="font-size:28px">👨‍👩‍👧</div><p>No parents linked yet. Share your invite link above with your parents.</p></div>`;
+    return;
+  }
+  const {doc,getDoc}=fn();
+  let html='';
+  for(const uid of parents){
+    const snap=await getDoc(doc(db(),'users',uid));
+    if(!snap.exists()) continue;
+    const p=snap.data();
+    html+=`<div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(136,170,136,0.08);border-radius:10px;margin-bottom:8px">
+      <div class="student-avatar" style="width:34px;height:34px;font-size:13px;background:linear-gradient(135deg,#88aa88,#a8c8a8)">${(p.name||'P')[0]}</div>
+      <div><div style="font-size:13px;font-weight:600">${p.name}</div><div style="font-size:11px;color:var(--text3)">${p.email}</div></div>
+      <div style="margin-left:auto;font-size:11px;color:var(--green);font-weight:600">✓ Linked</div>
+    </div>`;
+  }
+  el.innerHTML=html;
 }
 
 async function loadLinkedTeacherInfo() {
@@ -1821,6 +1853,10 @@ async function loadEnrolledStudents() {
 // ═══════════════════════════════════════════════════════
 async function renderParentChildren() {
   const el=document.getElementById('parentChildrenContent');
+  // Re-fetch so linkedChildren is always current
+  const {doc,getDoc}=fn();
+  const freshSnap=await getDoc(doc(db(),'users',currentUser.uid));
+  if(freshSnap.exists()) userProfile=freshSnap.data();
   const children=userProfile.linkedChildren||[];
   if(!children.length){
     el.innerHTML=`<div class="card"><div class="empty-state"><div class="empty-icon">👦</div><p>No children linked yet. Go to "Link a Child" to connect to your child's account.</p></div></div>`;
@@ -1927,7 +1963,11 @@ async function sendParentMessage(teacherId){
 // ═══════════════════════════════════════════════════════
 // PARENT CONNECT
 // ═══════════════════════════════════════════════════════
-function renderParentConnect(){
+async function renderParentConnect(){
+  // Re-fetch so profile is current
+  const {doc,getDoc}=fn();
+  const freshSnap=await getDoc(doc(db(),'users',currentUser.uid));
+  if(freshSnap.exists()) userProfile=freshSnap.data();
   const el=document.getElementById('parentConnectContent');
   const myLink=`${window.location.origin}${window.location.pathname}?invite=${userProfile.inviteToken}`;
   el.innerHTML=`
