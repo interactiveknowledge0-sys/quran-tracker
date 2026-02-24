@@ -33,21 +33,25 @@ const firebaseConfig = {
 };
 // ════════════════════════════════════
 
-const app  = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db   = getFirestore(app);
+try {
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
 
-window.__firebaseReady = true;
-window.__auth = auth;
-window.__db   = db;
-window.__firebaseFns = {
-  createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
-  onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup,
-  doc, setDoc, getDoc, updateDoc, collection, getDocs, query, where,
-  addDoc, onSnapshot, serverTimestamp, deleteDoc, orderBy
-};
-
-document.dispatchEvent(new Event('firebaseReady'));
+  window.__firebaseReady = true;
+  window.__auth = auth;
+  window.__db   = db;
+  window.__firebaseFns = {
+    createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
+    onAuthStateChanged, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup,
+    doc, setDoc, getDoc, updateDoc, collection, getDocs, query, where,
+    addDoc, onSnapshot, serverTimestamp, deleteDoc, orderBy
+  };
+  document.dispatchEvent(new Event('firebaseReady'));
+} catch(err) {
+  window.__firebaseError = err.message;
+  document.dispatchEvent(new Event('firebaseReady'));
+}
 </script>
 
 <style>
@@ -2213,9 +2217,34 @@ if(localStorage.getItem('qtTheme')==='dark'){
   document.getElementById('themeKnob').textContent='☀️';
 }
 
-document.addEventListener('firebaseReady',()=>{
-  fn().onAuthStateChanged(auth(), async user=>{
-    if(user){
+function startAuthListener() {
+  // Show config error if Firebase failed to init
+  if(window.__firebaseError || !window.__firebaseReady) {
+    document.getElementById('loadingOverlay').style.display = 'none';
+    document.getElementById('authScreen').classList.add('active');
+    const errEl = document.getElementById('authError');
+    errEl.textContent = window.__firebaseError
+      ? '⚠️ Firebase config error: ' + window.__firebaseError + ' — Please check your API keys in the HTML file.'
+      : '⚠️ Firebase failed to load. Check your internet connection and config values.';
+    errEl.classList.add('visible');
+    return;
+  }
+
+  // Set a 10-second timeout fallback in case onAuthStateChanged never fires
+  const timeout = setTimeout(() => {
+    if(document.getElementById('loadingOverlay').style.display !== 'none' &&
+       !document.getElementById('loadingOverlay').classList.contains('hide')) {
+      hideLoading();
+      document.getElementById('authScreen').classList.add('active');
+      const errEl = document.getElementById('authError');
+      errEl.textContent = '⚠️ Connection timed out. Check your Firebase config values and internet connection.';
+      errEl.classList.add('visible');
+    }
+  }, 10000);
+
+  fn().onAuthStateChanged(auth(), async user => {
+    clearTimeout(timeout);
+    if(user) {
       await initApp(user);
     } else {
       document.getElementById('authScreen').classList.add('active');
@@ -2223,7 +2252,26 @@ document.addEventListener('firebaseReady',()=>{
       hideLoading();
     }
   });
-});
+}
+
+// Listen for firebaseReady event, with a polling fallback
+// in case the event fired before this script ran
+document.addEventListener('firebaseReady', startAuthListener);
+
+// Fallback: if module already fired before listener was attached, poll for it
+const _fbPoll = setInterval(() => {
+  if(window.__firebaseReady !== undefined) {
+    clearInterval(_fbPoll);
+    // Only run if startAuthListener hasn't been triggered via event yet
+    if(!window.__authListenerStarted) {
+      window.__authListenerStarted = true;
+      startAuthListener();
+    }
+  }
+}, 100);
+
+// Mark listener as started when event fires to avoid double-run
+document.addEventListener('firebaseReady', () => { window.__authListenerStarted = true; });
 
 // Keyboard listeners
 document.addEventListener('keydown',e=>{
