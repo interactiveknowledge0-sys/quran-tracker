@@ -1998,7 +1998,6 @@ async function renderParentChildren() {
   }
   el.innerHTML='<div class="children-grid" id="childrenGrid"></div>';
   const grid=document.getElementById('childrenGrid');
-  const {doc,getDoc}=fn();
   for(const uid of children){
     const snap=await getDoc(doc(db(),'users',uid));
     if(!snap.exists()) continue;
