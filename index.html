@@ -2239,11 +2239,20 @@ async function openSurahViewer(num){
     if(json.code !== 200 || !json.data || json.data.length < 2) throw new Error('Unexpected response');
     const arAyahs = json.data[0].ayahs;   // Uthmani Arabic
     const enAyahs = json.data[1].ayahs;   // English translation
-    verseCache[num] = arAyahs.map((a, i) => ({
-      numberInSurah: a.numberInSurah,
-      text: a.text,
-      translation: (enAyahs[i] && enAyahs[i].text) || ''
-    }));
+    // Bismillah pattern — strip from verse 1 for surahs 2-113
+    // (Surah 1: Bismillah IS verse 1; Surah 9: no Bismillah)
+    const bismillahAr = /^بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ\s*/;
+    const bismillahEn = /^In the name of Allah[^.]*\.\s*/i;
+    verseCache[num] = arAyahs.map((a, i) => {
+      let arText = a.text;
+      let enText = (enAyahs[i] && enAyahs[i].text) || '';
+      // Strip Bismillah from first verse for surahs 2–113
+      if(i === 0 && num !== 1 && num !== 9){
+        arText = arText.replace(bismillahAr, '').trim();
+        enText = enText.replace(bismillahEn, '').trim();
+      }
+      return { numberInSurah: a.numberInSurah, text: arText, translation: enText };
+    });
     if (fetchId !== currentSurahFetchId) return;
     renderVerses(verseCache[num]);
   } catch {
