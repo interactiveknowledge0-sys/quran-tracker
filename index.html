@@ -2239,17 +2239,43 @@ async function openSurahViewer(num){
     if(json.code !== 200 || !json.data || json.data.length < 2) throw new Error('Unexpected response');
     const arAyahs = json.data[0].ayahs;   // Uthmani Arabic
     const enAyahs = json.data[1].ayahs;   // English translation
-    // Bismillah pattern — strip from verse 1 for surahs 2-113
+
+    // Robust Bismillah stripping for verse 1 of surahs 2–113
     // (Surah 1: Bismillah IS verse 1; Surah 9: no Bismillah)
-    const bismillahAr = /^بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ\s*/;
-    const bismillahEn = /^In the name of Allah[^.]*\.\s*/i;
+    // The API embeds Bismillah into verse 1 text. We strip it since
+    // it's already shown separately in the sv-bismillah banner.
+    // Instead of fragile regex, we detect the Bismillah by looking for
+    // "الرحيم" (stripped of diacritics) which ends the Bismillah phrase.
+    function stripBismillah(text) {
+      // Remove all diacritics (tashkeel) for matching purposes
+      const stripped = text.replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED]/g, '');
+      // Find "الرحيم" (end of Bismillah) in diacritics-stripped version
+      const marker = 'الرحيم';
+      const idx = stripped.indexOf(marker);
+      if (idx === -1) return text; // not found, return as-is
+      // Map position back to original text: count non-diacritic chars
+      let origIdx = 0, count = 0;
+      for (origIdx = 0; origIdx < text.length; origIdx++) {
+        const c = text.charCodeAt(origIdx);
+        const isDiacritic = (c >= 0x0610 && c <= 0x061A) || (c >= 0x064B && c <= 0x065F) || c === 0x0670 || (c >= 0x06D6 && c <= 0x06DC) || (c >= 0x06DF && c <= 0x06E4) || c === 0x06E7 || c === 0x06E8 || (c >= 0x06EA && c <= 0x06ED);
+        if (!isDiacritic) count++;
+        if (count === idx + marker.length) { origIdx++; break; }
+      }
+      // Skip any whitespace after the Bismillah
+      while (origIdx < text.length && /\s/.test(text[origIdx])) origIdx++;
+      const result = text.substring(origIdx);
+      return result || text; // fallback to full text if stripping removed everything
+    }
+
     verseCache[num] = arAyahs.map((a, i) => {
       let arText = a.text;
       let enText = (enAyahs[i] && enAyahs[i].text) || '';
-      // Strip Bismillah from first verse for surahs 2–113
-      if(i === 0 && num !== 1 && num !== 9){
-        arText = arText.replace(bismillahAr, '').trim();
-        enText = enText.replace(bismillahEn, '').trim();
+      if (i === 0 && num !== 1 && num !== 9) {
+        arText = stripBismillah(arText);
+        // English: strip "In the name of..." prefix
+        enText = enText.replace(/^In\s+the\s+name\s+of\s+Allah[\s\S]*?(?:Merciful|Mercy)[.,;:!?\-–—]*\s*/i, '').trim();
+        // Capitalize first letter after stripping
+        if (enText) enText = enText.charAt(0).toUpperCase() + enText.slice(1);
       }
       return { numberInSurah: a.numberInSurah, text: arText, translation: enText };
     });
