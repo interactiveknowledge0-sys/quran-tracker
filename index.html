@@ -2231,19 +2231,18 @@ async function openSurahViewer(num){
 
   try {
     if(verseCache[num]){renderVerses(verseCache[num]);return;}
-    // Quran.com API v4 — returns proper Uthmani script with clean verse boundaries
-    // Translation 131 = Sahih International
-    const res = await fetch(`https://api.quran.com/api/v4/verses/by_chapter/${num}?language=en&translations=131&fields=text_uthmani&per_page=300`);
+    // Multi-edition endpoint: Uthmani script + Sahih International in one request
+    const res = await fetch(`https://api.alquran.cloud/v1/surah/${num}/editions/quran-uthmani,en.sahih`);
     if (fetchId !== currentSurahFetchId) return;
     if(!res.ok) throw new Error('API request failed');
-    const data = await res.json();
-    verseCache[num] = data.verses.map(v => ({
-      numberInSurah: v.verse_number,
-      text: v.text_uthmani,
-      // Strip HTML tags (footnote superscripts) from translation text
-      translation: (v.translations && v.translations[0] && v.translations[0].text)
-        ? v.translations[0].text.replace(/<[^>]*>/g, '')
-        : ''
+    const json = await res.json();
+    if(json.code !== 200 || !json.data || json.data.length < 2) throw new Error('Unexpected response');
+    const arAyahs = json.data[0].ayahs;   // Uthmani Arabic
+    const enAyahs = json.data[1].ayahs;   // English translation
+    verseCache[num] = arAyahs.map((a, i) => ({
+      numberInSurah: a.numberInSurah,
+      text: a.text,
+      translation: (enAyahs[i] && enAyahs[i].text) || ''
     }));
     if (fetchId !== currentSurahFetchId) return;
     renderVerses(verseCache[num]);
