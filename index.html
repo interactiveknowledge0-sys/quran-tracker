@@ -603,12 +603,362 @@ body.dark-mode .date-input { color-scheme: dark; }
 body.dark-mode .notes-input:focus { background: var(--border) !important; }
 body.dark-mode .surah-num { background: var(--surface) !important; }
 body.dark-mode tbody tr:hover { background: rgba(167,139,250,0.03) !important; }
+
+/* ══════════════════════════════════════
+   MILK THEME — Warm Cream & Soft Beige
+   ══════════════════════════════════════ */
+body.milk-theme {
+  --bg: #faf7f2; --surface: #f3ede3; --card: #fffdf9; --border: #ecddd0; --border2: #d9c9b8;
+  --teal: #c07a4f; --teal2: #a5633c; --gold: #d4a847; --amber: #e8944a;
+  --blue: #7a9fb5; --red: #c96060; --green: #7aad6a; --text: #3d2f24; --text2: #7a6050; --text3: #b09a88;
+  --shadow-sm: 0 1px 3px rgba(90,60,30,0.06), 0 1px 2px rgba(90,60,30,0.08);
+  --shadow: 0 4px 6px rgba(90,60,30,0.05), 0 10px 24px rgba(90,60,30,0.08);
+  --shadow-lg: 0 8px 16px rgba(90,60,30,0.06), 0 20px 48px rgba(90,60,30,0.1);
+  --shadow-xl: 0 12px 28px rgba(90,60,30,0.08), 0 32px 64px rgba(90,60,30,0.12);
+}
+body.milk-theme::before {
+  background-image:
+    radial-gradient(800px 500px at 15% 5%, rgba(192,122,79,0.07) 0%, transparent 70%),
+    radial-gradient(600px 400px at 85% 80%, rgba(122,159,181,0.05) 0%, transparent 70%),
+    radial-gradient(500px 350px at 50% 50%, rgba(212,168,71,0.04) 0%, transparent 70%);
+}
+body.milk-theme header, body.milk-theme nav { background: rgba(255,253,249,0.88) !important; border-bottom-color: var(--border) !important; }
+body.milk-theme .card, body.milk-theme .kpi-card, body.milk-theme .kpi-card,
+body.milk-theme .table-wrap, body.milk-theme .heatmap-wrap, body.milk-theme .goal-card,
+body.milk-theme .badge-card, body.milk-theme .juz-bar, body.milk-theme .student-card,
+body.milk-theme .child-card, body.milk-theme .history-item { background: var(--card) !important; border-color: var(--border) !important; }
+body.milk-theme thead { background: #f3ede3 !important; }
+body.milk-theme .modal { background: var(--card) !important; }
+body.milk-theme .tab-btn.active { background: linear-gradient(135deg, #c07a4f, #d4956a) !important; box-shadow: 0 4px 16px rgba(192,122,79,0.3) !important; }
+body.milk-theme .filter-btn.active-filter { background: linear-gradient(135deg, #c07a4f, #d4956a) !important; border-color: transparent !important; color: #fff !important; box-shadow: 0 4px 12px rgba(192,122,79,0.25) !important; }
+body.milk-theme .btn-primary { background: linear-gradient(135deg, #c07a4f, #d4956a) !important; }
+body.milk-theme .logo-icon { background: linear-gradient(135deg, #c07a4f, #d4956a) !important; }
+body.milk-theme .user-avatar { background: linear-gradient(135deg, #c07a4f, #d4956a) !important; }
+body.milk-theme .student-avatar { background: linear-gradient(135deg, #c07a4f, #d4956a) !important; }
+body.milk-theme .child-avatar { background: linear-gradient(135deg, #c07a4f, #d4956a) !important; }
+body.milk-theme .status-badge.memorising { background: rgba(122,159,181,0.12) !important; color: #4e7d99 !important; border-color: rgba(122,159,181,0.25) !important; }
+body.milk-theme .heatmap-cell { background: #ecddd0 !important; }
+body.milk-theme .heatmap-cell.l1 { background: rgba(192,122,79,0.2) !important; }
+body.milk-theme .heatmap-cell.l2 { background: rgba(192,122,79,0.4) !important; }
+body.milk-theme .heatmap-cell.l3 { background: rgba(192,122,79,0.65) !important; }
+body.milk-theme .heatmap-cell.l4 { background: rgba(192,122,79,0.9) !important; }
+body.milk-theme .kpi-card.c1::before { background: linear-gradient(90deg, #c07a4f, #d4956a) !important; }
+body.milk-theme .kpi-card.c1 .kpi-value { color: #c07a4f !important; }
+body.milk-theme .kpi-card.c1 .kpi-icon { background: linear-gradient(135deg,rgba(192,122,79,.12),rgba(192,122,79,.06)) !important; }
+body.milk-theme .sv-banner { background: linear-gradient(160deg, #f7f0e8, #f0e6d8, #f7f3ec) !important; border-color: rgba(192,122,79,0.12) !important; }
+body.milk-theme .sv-translit { color: #c07a4f !important; }
+body.milk-theme .arabic-col { color: #c07a4f !important; }
+body.milk-theme .goal-bar-fill { background: linear-gradient(90deg, #c07a4f, #d4956a) !important; }
+body.milk-theme .kpi-bar-fill { background: linear-gradient(90deg, #c07a4f, #7a9fb5) !important; }
+body.milk-theme .message-bubble.sent { background: linear-gradient(135deg, #c07a4f, #d4956a) !important; }
+body.milk-theme .user-menu-btn { background: var(--card) !important; border-color: var(--border) !important; }
+body.milk-theme .header-dropdown { background: var(--card) !important; border-color: var(--border) !important; }
+body.milk-theme .hd-item:hover { background: rgba(192,122,79,0.05) !important; color: #c07a4f !important; }
+body.milk-theme .search-box:focus { border-color: #c07a4f !important; box-shadow: 0 0 0 4px rgba(192,122,79,0.1) !important; }
+body.milk-theme .modal-input:focus { border-color: #c07a4f !important; box-shadow: 0 0 0 3px rgba(192,122,79,0.1) !important; }
+body.milk-theme .sv-ctrl-btn.active { background: linear-gradient(135deg, #c07a4f, #d4956a) !important; }
+body.milk-theme .badge-earned-tag { color: #c07a4f !important; background: rgba(192,122,79,0.08) !important; }
+body.milk-theme .badge-card.earned { background: linear-gradient(145deg, rgba(192,122,79,0.04), #fffdf9) !important; border-color: rgba(192,122,79,0.12) !important; }
+
+/* ══════════════════════════════════════
+   PETAL THEME — Blush Rose & Soft Pink
+   ══════════════════════════════════════ */
+body.petal-theme {
+  --bg: #fdf4f7; --surface: #f7e8ef; --card: #fffcfd; --border: #efd1de; --border2: #ddb8cb;
+  --teal: #c2587a; --teal2: #a83f63; --gold: #d4956e; --amber: #e8844a;
+  --blue: #9b7abb; --red: #c05050; --green: #82b88c; --text: #3a1f2a; --text2: #7a5060; --text3: #b89aaa;
+  --shadow-sm: 0 1px 3px rgba(180,60,100,0.06), 0 1px 2px rgba(180,60,100,0.08);
+  --shadow: 0 4px 6px rgba(180,60,100,0.04), 0 10px 24px rgba(180,60,100,0.07);
+  --shadow-lg: 0 8px 16px rgba(180,60,100,0.05), 0 20px 48px rgba(180,60,100,0.09);
+  --shadow-xl: 0 12px 28px rgba(180,60,100,0.07), 0 32px 64px rgba(180,60,100,0.11);
+}
+body.petal-theme::before {
+  background-image:
+    radial-gradient(800px 500px at 15% 5%, rgba(194,88,122,0.07) 0%, transparent 70%),
+    radial-gradient(600px 400px at 85% 80%, rgba(155,122,187,0.05) 0%, transparent 70%),
+    radial-gradient(500px 350px at 50% 50%, rgba(212,149,110,0.04) 0%, transparent 70%);
+}
+body.petal-theme header, body.petal-theme nav { background: rgba(255,252,253,0.88) !important; border-bottom-color: var(--border) !important; }
+body.petal-theme .card, body.petal-theme .kpi-card,
+body.petal-theme .table-wrap, body.petal-theme .heatmap-wrap, body.petal-theme .goal-card,
+body.petal-theme .badge-card, body.petal-theme .juz-bar, body.petal-theme .student-card,
+body.petal-theme .child-card, body.petal-theme .history-item { background: var(--card) !important; border-color: var(--border) !important; }
+body.petal-theme thead { background: #f7e8ef !important; }
+body.petal-theme .modal { background: var(--card) !important; }
+body.petal-theme .tab-btn.active { background: linear-gradient(135deg, #c2587a, #d4729a) !important; box-shadow: 0 4px 16px rgba(194,88,122,0.3) !important; }
+body.petal-theme .filter-btn.active-filter { background: linear-gradient(135deg, #c2587a, #d4729a) !important; border-color: transparent !important; color: #fff !important; }
+body.petal-theme .btn-primary { background: linear-gradient(135deg, #c2587a, #d4729a) !important; }
+body.petal-theme .logo-icon { background: linear-gradient(135deg, #c2587a, #d4729a) !important; }
+body.petal-theme .user-avatar { background: linear-gradient(135deg, #c2587a, #d4729a) !important; }
+body.petal-theme .student-avatar { background: linear-gradient(135deg, #c2587a, #d4729a) !important; }
+body.petal-theme .child-avatar { background: linear-gradient(135deg, #c2587a, #d4729a) !important; }
+body.petal-theme .heatmap-cell { background: #efd1de !important; }
+body.petal-theme .heatmap-cell.l1 { background: rgba(194,88,122,0.2) !important; }
+body.petal-theme .heatmap-cell.l2 { background: rgba(194,88,122,0.4) !important; }
+body.petal-theme .heatmap-cell.l3 { background: rgba(194,88,122,0.65) !important; }
+body.petal-theme .heatmap-cell.l4 { background: rgba(194,88,122,0.9) !important; }
+body.petal-theme .kpi-card.c1::before { background: linear-gradient(90deg, #c2587a, #d4729a) !important; }
+body.petal-theme .kpi-card.c1 .kpi-value { color: #c2587a !important; }
+body.petal-theme .kpi-card.c1 .kpi-icon { background: linear-gradient(135deg,rgba(194,88,122,.12),rgba(194,88,122,.06)) !important; }
+body.petal-theme .sv-banner { background: linear-gradient(160deg, #fceef4, #f7e4ed, #fdf2f7) !important; border-color: rgba(194,88,122,0.12) !important; }
+body.petal-theme .sv-translit { color: #c2587a !important; }
+body.petal-theme .arabic-col { color: #c2587a !important; }
+body.petal-theme .goal-bar-fill { background: linear-gradient(90deg, #c2587a, #d4729a) !important; }
+body.petal-theme .kpi-bar-fill { background: linear-gradient(90deg, #c2587a, #9b7abb) !important; }
+body.petal-theme .message-bubble.sent { background: linear-gradient(135deg, #c2587a, #d4729a) !important; }
+body.petal-theme .user-menu-btn { background: var(--card) !important; border-color: var(--border) !important; }
+body.petal-theme .header-dropdown { background: var(--card) !important; border-color: var(--border) !important; }
+body.petal-theme .hd-item:hover { background: rgba(194,88,122,0.05) !important; color: #c2587a !important; }
+body.petal-theme .search-box:focus { border-color: #c2587a !important; box-shadow: 0 0 0 4px rgba(194,88,122,0.1) !important; }
+body.petal-theme .modal-input:focus { border-color: #c2587a !important; box-shadow: 0 0 0 3px rgba(194,88,122,0.1) !important; }
+body.petal-theme .sv-ctrl-btn.active { background: linear-gradient(135deg, #c2587a, #d4729a) !important; }
+body.petal-theme .badge-earned-tag { color: #c2587a !important; background: rgba(194,88,122,0.08) !important; }
+body.petal-theme .badge-card.earned { background: linear-gradient(145deg, rgba(194,88,122,0.04), #fffcfd) !important; border-color: rgba(194,88,122,0.12) !important; }
+
+/* ══════════════════════════════════════
+   SETTINGS MODAL
+   ══════════════════════════════════════ */
+.settings-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(12px);
+  z-index: 800; display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.25s; padding: 20px;
+}
+.settings-overlay.open { opacity: 1; pointer-events: all; }
+.settings-modal {
+  background: var(--card, #fff); border-radius: 28px; padding: 40px; width: 520px; max-width: 96vw;
+  transform: translateY(20px) scale(0.97); transition: all 0.3s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: var(--shadow-xl, 0 32px 64px rgba(0,0,0,0.15)); border: 1px solid var(--border, #e6e9f4);
+}
+.settings-overlay.open .settings-modal { transform: translateY(0) scale(1); }
+.settings-modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+.settings-modal-title { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+.settings-close-btn {
+  width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface);
+  color: var(--text3); font-size: 14px; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; transition: all 0.2s;
+}
+.settings-close-btn:hover { background: var(--border); color: var(--text); }
+.settings-section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text3); margin-bottom: 14px; }
+.theme-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.theme-swatch {
+  border-radius: 18px; padding: 18px 12px; cursor: pointer; border: 2px solid transparent;
+  text-align: center; transition: all 0.25s cubic-bezier(.4,0,.2,1); position: relative;
+}
+.theme-swatch:hover { transform: translateY(-3px); }
+.theme-swatch.active { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(115,102,255,0.12); }
+.theme-swatch-preview {
+  width: 44px; height: 44px; border-radius: 12px; margin: 0 auto 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+.theme-swatch-name { font-size: 12px; font-weight: 600; color: var(--text); }
+.theme-swatch-desc { font-size: 10px; color: var(--text3); margin-top: 3px; line-height: 1.4; }
+.theme-swatch.active::after {
+  content: '✓'; position: absolute; top: 8px; right: 10px;
+  font-size: 11px; color: var(--teal); font-weight: 700;
+}
+/* Swatch backgrounds */
+.swatch-default { background: linear-gradient(135deg, #f2f3f8, #eaecf4); }
+.swatch-dark    { background: linear-gradient(135deg, #0d0f1a, #1a1d2e); }
+.swatch-milk    { background: linear-gradient(135deg, #faf7f2, #f3ede3); }
+.swatch-petal   { background: linear-gradient(135deg, #fdf4f7, #f7e8ef); }
+.swatch-default .theme-swatch-preview { background: linear-gradient(135deg, #7366ff, #a78bfa); }
+.swatch-dark .theme-swatch-preview    { background: linear-gradient(135deg, #7366ff, #a78bfa); }
+.swatch-milk .theme-swatch-preview    { background: linear-gradient(135deg, #c07a4f, #d4956a); }
+.swatch-petal .theme-swatch-preview   { background: linear-gradient(135deg, #c2587a, #d4729a); }
+.swatch-dark .theme-swatch-name, .swatch-dark .theme-swatch-desc { color: rgba(255,255,255,0.7); }
+/* Settings button in header */
+.settings-btn {
+  width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--border); background: var(--card, #fff);
+  box-shadow: var(--shadow-sm); color: var(--text2); font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: all 0.25s;
+}
+.settings-btn:hover { border-color: var(--teal); color: var(--teal); transform: rotate(25deg); box-shadow: var(--shadow); }
+
+/* ══════════════════════════════════════
+   QUIZ STYLES
+   ══════════════════════════════════════ */
+.quiz-card { background: var(--card,#fff); border-radius: var(--radius); padding: 36px; box-shadow: var(--shadow-lg); border: 1px solid var(--border); max-width: 680px; margin: 0 auto; text-align: center; }
+.quiz-question-arabic { font-family: var(--arabic); font-size: 52px; line-height: 1.6; color: var(--text); margin: 24px 0 8px; direction: rtl; }
+.quiz-question-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.7px; font-weight: 700; }
+.quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 28px 0; }
+.quiz-option { padding: 16px 20px; border-radius: 16px; border: 2px solid var(--border); background: var(--surface); cursor: pointer; font-size: 14px; font-weight: 500; color: var(--text); transition: all 0.2s cubic-bezier(.4,0,.2,1); text-align: left; }
+.quiz-option:hover { border-color: var(--teal); background: rgba(115,102,255,0.04); transform: translateY(-2px); }
+.quiz-option.correct { border-color: var(--green); background: rgba(81,187,37,0.08); color: var(--green); }
+.quiz-option.wrong { border-color: var(--red); background: rgba(247,49,100,0.08); color: var(--red); }
+.quiz-option.reveal { border-color: var(--green); background: rgba(81,187,37,0.06); }
+.quiz-score { display: flex; align-items: center; gap: 20px; justify-content: center; margin: 24px 0; }
+.quiz-score-item { text-align: center; }
+.quiz-score-num { font-size: 36px; font-weight: 800; letter-spacing: -1px; }
+.quiz-score-label { font-size: 11px; color: var(--text3); text-transform: uppercase; font-weight: 600; }
+.quiz-mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 680px; margin: 0 auto 28px; }
+.quiz-mode-card { background: var(--card,#fff); border-radius: 18px; padding: 24px 16px; text-align: center; cursor: pointer; border: 2px solid var(--border); transition: all 0.25s; box-shadow: var(--shadow-sm); }
+.quiz-mode-card:hover { border-color: var(--teal); transform: translateY(-3px); box-shadow: var(--shadow); }
+.quiz-mode-card .qm-emoji { font-size: 32px; margin-bottom: 10px; }
+.quiz-mode-card .qm-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.quiz-mode-card .qm-desc { font-size: 11px; color: var(--text3); line-height: 1.5; }
+.quiz-progress { height: 6px; background: var(--surface); border-radius: 3px; margin-bottom: 24px; overflow: hidden; }
+.quiz-progress-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--blue)); border-radius: 3px; transition: width 0.4s ease; }
+.quiz-result-card { background: var(--card,#fff); border-radius: var(--radius); padding: 48px 36px; text-align: center; max-width: 480px; margin: 0 auto; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+.quiz-result-emoji { font-size: 64px; margin-bottom: 16px; }
+.quiz-result-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+.quiz-result-sub { font-size: 14px; color: var(--text2); margin-bottom: 32px; }
+
+/* ══════════════════════════════════════
+   TAJWEED STYLES
+   ══════════════════════════════════════ */
+.tajweed-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+.tajweed-stat-card { background: var(--card,#fff); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
+.tjw-mistake-item { display: flex; align-items: flex-start; gap: 14px; padding: 16px; background: var(--card,#fff); border-radius: 14px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); margin-bottom: 10px; transition: all 0.2s; }
+.tjw-mistake-item:hover { box-shadow: var(--shadow); }
+.tjw-rule-tag { padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; }
+.tjw-rule-tag.makharij { background: rgba(115,102,255,0.1); color: var(--teal); }
+.tjw-rule-tag.madd { background: rgba(38,151,243,0.1); color: var(--blue); }
+.tjw-rule-tag.ghunna { background: rgba(244,165,58,0.1); color: var(--amber); }
+.tjw-rule-tag.qalqalah { background: rgba(81,187,37,0.1); color: var(--green); }
+.tjw-rule-tag.waqf { background: rgba(247,49,100,0.1); color: var(--red); }
+.tjw-rule-tag.other { background: var(--surface); color: var(--text3); }
+.tjw-mistake-text { flex: 1; }
+.tjw-mistake-surah { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.tjw-mistake-note { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.tjw-mistake-date { font-size: 10px; color: var(--text3); white-space: nowrap; }
+.tjw-rule-bar { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.tjw-rule-bar:last-child { border-bottom: none; }
+.tjw-rule-name { font-size: 12px; font-weight: 600; color: var(--text2); min-width: 90px; }
+.tjw-rule-count { font-size: 12px; font-weight: 700; min-width: 24px; text-align: right; }
+.tjw-bar-track { flex: 1; height: 6px; background: var(--surface); border-radius: 3px; overflow: hidden; }
+.tjw-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+
+/* ══════════════════════════════════════
+   DUA STYLES
+   ══════════════════════════════════════ */
+.dua-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+.dua-card { background: var(--card,#fff); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: all 0.25s; position: relative; }
+.dua-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+.dua-card.memorised { border-color: rgba(81,187,37,0.25); background: linear-gradient(145deg, rgba(81,187,37,0.03), var(--card,#fff)); }
+.dua-arabic { font-family: var(--arabic); font-size: 22px; line-height: 2; direction: rtl; text-align: right; color: var(--text); margin-bottom: 10px; }
+.dua-transliteration { font-size: 12px; color: var(--teal); font-style: italic; margin-bottom: 6px; font-weight: 500; }
+.dua-translation { font-size: 12px; color: var(--text2); line-height: 1.7; margin-bottom: 14px; }
+.dua-occasion { font-size: 10px; color: var(--text3); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 12px; }
+.dua-actions { display: flex; align-items: center; justify-content: space-between; }
+.dua-mem-btn { padding: 6px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; font-size: 11px; font-weight: 600; color: var(--text2); transition: all 0.2s; font-family: var(--font); }
+.dua-mem-btn:hover { border-color: var(--green); color: var(--green); }
+.dua-mem-btn.active { background: rgba(81,187,37,0.1); border-color: var(--green); color: var(--green); }
+.dua-filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.dua-filter-btn { padding: 7px 16px; border-radius: 24px; border: 1px solid var(--border); background: var(--card,#fff); font-size: 12px; font-weight: 600; color: var(--text2); cursor: pointer; transition: all 0.2s; font-family: var(--font); }
+.dua-filter-btn.active { background: linear-gradient(135deg, var(--teal), var(--teal2)); border-color: transparent; color: #fff; }
+.dua-count-badge { position: absolute; top: 16px; right: 16px; background: rgba(81,187,37,0.12); color: var(--green); font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 8px; }
+
+/* ══════════════════════════════════════
+   AUDIO PLAYER STYLES
+   ══════════════════════════════════════ */
+.audio-bar { display: flex; align-items: center; gap: 12px; padding: 12px 18px; background: linear-gradient(135deg, rgba(115,102,255,0.06), rgba(38,151,243,0.04)); border: 1px solid rgba(115,102,255,0.12); border-radius: 14px; margin-bottom: 16px; }
+.audio-play-btn { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--teal), var(--teal2)); border: none; color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; box-shadow: 0 4px 12px rgba(115,102,255,0.3); }
+.audio-play-btn:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(115,102,255,0.4); }
+.audio-info { flex: 1; min-width: 0; }
+.audio-title { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.audio-sub { font-size: 11px; color: var(--text3); }
+.audio-progress-track { flex: 2; height: 4px; background: var(--surface); border-radius: 2px; cursor: pointer; position: relative; }
+.audio-progress-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--blue)); border-radius: 2px; width: 0%; transition: width 0.2s; pointer-events: none; }
+
+/* ══════════════════════════════════════
+   SHARE PROGRESS CARD
+   ══════════════════════════════════════ */
+.share-card { background: linear-gradient(135deg, #7366ff, #a78bfa, #2697f3); border-radius: 20px; padding: 32px; color: #fff; text-align: center; margin-bottom: 24px; position: relative; overflow: hidden; }
+.share-card::before { content: 'بِسْمِ اللَّهِ'; position: absolute; top: -10px; right: 20px; font-family: var(--arabic); font-size: 60px; opacity: 0.08; color: #fff; pointer-events: none; }
+.share-card-title { font-size: 13px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.7px; font-weight: 600; margin-bottom: 8px; }
+.share-card-num { font-size: 64px; font-weight: 900; letter-spacing: -3px; line-height: 1; margin-bottom: 4px; }
+.share-card-sub { font-size: 14px; opacity: 0.85; margin-bottom: 20px; }
+.share-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.share-btn { padding: 10px 20px; border-radius: 50px; border: 1.5px solid rgba(255,255,255,0.4); background: rgba(255,255,255,0.12); color: #fff; font-family: var(--font); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; backdrop-filter: blur(8px); }
+.share-btn:hover { background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.7); }
+
+/* Tajweed add form */
+.tjw-add-form { background: var(--card,#fff); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); margin-bottom: 24px; }
+.tjw-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.tjw-select, .tjw-input { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; font-family: var(--font); font-size: 13px; color: var(--text); outline: none; transition: all 0.2s; }
+.tjw-select:focus, .tjw-input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(115,102,255,0.08); }
+
+/* Audio in SV modal */
+.sv-audio { padding: 12px 28px; background: var(--surface); border-bottom: 1px solid var(--border); }
+
 </style>
 </head>
 <body>
 
-<!-- Loading -->
-<div id="loadingOverlay">
+<!-- SETTINGS MODAL -->
+<div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this)closeSettings()">
+  <div class="settings-modal">
+    <div class="settings-modal-header">
+      <div class="settings-modal-title">⚙️ Appearance</div>
+      <button class="settings-close-btn" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="settings-section-label">Choose a theme</div>
+    <div class="theme-grid">
+      <div class="theme-swatch swatch-default active" id="swatch-default" onclick="applyTheme('default')">
+        <div class="theme-swatch-preview"></div>
+        <div class="theme-swatch-name">Default</div>
+        <div class="theme-swatch-desc">Clean violet & white</div>
+      </div>
+      <div class="theme-swatch swatch-dark" id="swatch-dark" onclick="applyTheme('dark')">
+        <div class="theme-swatch-preview"></div>
+        <div class="theme-swatch-name">Dark</div>
+        <div class="theme-swatch-desc">Deep night mode</div>
+      </div>
+      <div class="theme-swatch swatch-milk" id="swatch-milk" onclick="applyTheme('milk')">
+        <div class="theme-swatch-preview"></div>
+        <div class="theme-swatch-name">Milk</div>
+        <div class="theme-swatch-desc">Warm cream & terracotta</div>
+      </div>
+      <div class="theme-swatch swatch-petal" id="swatch-petal" onclick="applyTheme('petal')">
+        <div class="theme-swatch-preview"></div>
+        <div class="theme-swatch-name">Petal</div>
+        <div class="theme-swatch-desc">Blush rose & soft pink</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openSettings(){ document.getElementById('settingsOverlay').classList.add('open'); }
+function closeSettings(){ document.getElementById('settingsOverlay').classList.remove('open'); }
+
+function applyTheme(theme){
+  // Remove all theme classes
+  document.body.classList.remove('dark-mode','milk-theme','petal-theme');
+  // Remove active from all swatches
+  document.querySelectorAll('.theme-swatch').forEach(s=>s.classList.remove('active'));
+  // Apply
+  if(theme==='dark'){
+    document.body.classList.add('dark-mode');
+    document.getElementById('themeKnob').textContent='☀️';
+  } else {
+    document.getElementById('themeKnob').textContent='🌙';
+    if(theme==='milk') document.body.classList.add('milk-theme');
+    if(theme==='petal') document.body.classList.add('petal-theme');
+  }
+  document.getElementById('swatch-'+theme).classList.add('active');
+  localStorage.setItem('qtTheme', theme);
+}
+
+// Override the existing toggleTheme to sync with settings
+window._origToggleTheme = window.toggleTheme;
+window.toggleTheme = function(){
+  const isDark = document.body.classList.contains('dark-mode');
+  if(isDark){
+    applyTheme('default');
+  } else {
+    applyTheme('dark');
+  }
+};
+
+// Load saved theme on boot (override the existing check)
+(function(){
+  const saved = localStorage.getItem('qtTheme');
+  if(saved && saved !== 'light'){
+    setTimeout(()=>{ applyTheme(saved); }, 0);
+  }
+})();
+</script>
   <div style="text-align:center">
     <div style="font-size:36px;margin-bottom:24px">☪️</div>
     <section class="loader">
@@ -776,6 +1126,7 @@ body.dark-mode tbody tr:hover { background: rgba(167,139,250,0.03) !important; }
           <div class="hd-item danger" onclick="handleSignOut()">🚪 Sign Out</div>
         </div>
       </div>
+      <button class="settings-btn" onclick="openSettings()" title="Theme Settings">⚙️</button>
       <button class="theme-toggle" onclick="toggleTheme()"><span class="tt-knob" id="themeKnob">🌙</span></button>
     </div>
   </header>
@@ -889,7 +1240,23 @@ body.dark-mode tbody tr:hover { background: rgba(167,139,250,0.03) !important; }
       <div style="margin-bottom:20px"><h2 style="font-size:19px;font-weight:600;margin-bottom:4px">Link a Child</h2><p style="color:var(--text3);font-size:13px">Connect to your child's account</p></div>
       <div id="parentConnectContent"></div>
     </div>
+
+    <!-- QUIZ TAB -->
+    <div id="tab-quiz" class="tab-section">
+      <div id="quizContent"></div>
+    </div>
+
+    <!-- TAJWEED TAB -->
+    <div id="tab-tajweed" class="tab-section">
+      <div id="tajweedContent"></div>
+    </div>
+
+    <!-- DUA TAB -->
+    <div id="tab-dua" class="tab-section">
+      <div id="duaContent"></div>
+    </div>
   </main>
+
 </div>
 
 <!-- Surah Viewer Modal -->
@@ -901,6 +1268,19 @@ body.dark-mode tbody tr:hover { background: rgba(167,139,250,0.03) !important; }
       <div class="sv-translit" id="svTranslit"></div>
       <div class="sv-meaning" id="svMeaning"></div>
       <div class="sv-chips" id="svChips"></div>
+    </div>
+    <div class="sv-audio" id="svAudioBar">
+      <div class="audio-bar" style="margin-bottom:0">
+        <button class="audio-play-btn" id="svPlayBtn" onclick="toggleSurahAudio()">▶</button>
+        <div class="audio-info">
+          <div class="audio-title" id="svAudioTitle">Loading recitation…</div>
+          <div class="audio-sub">Sheikh Abdul Basit (Murattal)</div>
+        </div>
+        <div class="audio-progress-track" id="svProgressTrack" onclick="seekAudio(event)">
+          <div class="audio-progress-fill" id="svProgressFill"></div>
+        </div>
+        <div id="svAudioTime" style="font-size:11px;color:var(--text3);min-width:40px;text-align:right">0:00</div>
+      </div>
     </div>
     <div class="sv-controls">
       <div class="sv-ctrl-title">Verses</div>
@@ -1045,6 +1425,10 @@ const BADGES=[
   {id:'first_rev',emoji:'🔄',name:'Revisor',desc:'First surah in revision',check:s=>s.filter(x=>x.status==='revision').length>=1},
   {id:'annotator',emoji:'📝',name:'Annotator',desc:'Add notes to 5 surahs',check:s=>s.filter(x=>x.notes&&x.notes.trim()).length>=5},
   {id:'first_star',emoji:'⭐',name:'First Star',desc:'Rate confidence on a surah',check:s=>s.filter(x=>x.confidence>0).length>=1},
+  {id:'juz_29',emoji:'🌠',name:'Juz 29',desc:'Memorise all of Juz 29',check:s=>s.filter(x=>x.juz===29&&x.status==='memorised').length===s.filter(x=>x.juz===29).length},
+  {id:'thirty',emoji:'🎓',name:'Thirty Strong',desc:'Memorise 30 surahs',check:s=>s.filter(x=>x.status==='memorised').length>=30},
+  {id:'fifty',emoji:'💎',name:'Diamond',desc:'Memorise 50 surahs',check:s=>s.filter(x=>x.status==='memorised').length>=50},
+  {id:'streak_7',emoji:'🔥',name:'Week Warrior',desc:'7-day revision streak',check:(_s,st)=>{ if(!st) return false; let streak=0,today=new Date(); for(let i=0;i<7;i++){const d=new Date(today);d.setDate(d.getDate()-i);const ds=localDateStr(d);if(st.heatmap&&st.heatmap[ds])streak++;else break;} return streak>=7; }},
 ];
 
 // ═══════════════════════════════════════════════════════
@@ -1078,7 +1462,9 @@ function freshState() {
       {id:2,title:'Juz Amma Complete',target:37,deadline:'',metric:'memorised'},
       {id:3,title:'Overall Memorisation',target:114,deadline:'',metric:'memorised'},
       {id:4,title:'Active Revision',target:10,deadline:'',metric:'revision'},
-    ]
+    ],
+    tajweedMistakes: [],
+    duaState: {}
   };
 }
 
@@ -1348,7 +1734,7 @@ function buildNav() {
   const nav = document.getElementById('mainNav');
   let tabs = [];
   if(role==='student') {
-    tabs=[{id:'overview',label:'📊 Overview'},{id:'surahs',label:'📖 Surahs'},{id:'juz',label:'📚 By Juz'},{id:'heatmap',label:'📅 Revision Calendar'},{id:'goals',label:'🎯 Goals'},{id:'history',label:'📜 History'},{id:'connect',label:'🔗 Connect'}];
+    tabs=[{id:'overview',label:'📊 Overview'},{id:'surahs',label:'📖 Surahs'},{id:'juz',label:'📚 By Juz'},{id:'heatmap',label:'📅 Revision Calendar'},{id:'goals',label:'🎯 Goals'},{id:'quiz',label:'🧠 Quiz'},{id:'tajweed',label:'✏️ Tajweed'},{id:'dua',label:'🤲 Duas'},{id:'history',label:'📜 History'},{id:'connect',label:'🔗 Connect'}];
   } else if(role==='teacher') {
     tabs=[{id:'teacher-overview',label:'👥 Class Overview'},{id:'teacher-messages',label:'💬 Messages'},{id:'teacher-invite',label:'🔗 Invite & Manage'},{id:'overview',label:'📊 My Progress'},{id:'surahs',label:'📖 My Surahs'},{id:'heatmap',label:'📅 My Calendar'}];
   } else {
@@ -1383,6 +1769,9 @@ function renderTab(name) {
   if(name==='goals')             renderGoals();
   if(name==='history')           renderHistory();
   if(name==='connect')           renderConnectTab();
+  if(name==='quiz')               renderQuizTab();
+  if(name==='tajweed')            renderTajweedTab();
+  if(name==='dua')                renderDuaTab();
   if(name==='teacher-overview')  renderTeacherOverview();
   if(name==='teacher-messages')  renderTeacherMessages();
   if(name==='teacher-invite')    renderTeacherInvite();
@@ -1473,7 +1862,7 @@ function buildJuzData(surahs) {
 // ═══════════════════════════════════════════════════════
 function renderBadges() {
   const prev=userState.earnedBadges||[];
-  const now=BADGES.filter(b=>b.check(userState.surahs)).map(b=>b.id);
+  const now=BADGES.filter(b=>b.check(userState.surahs, userState)).map(b=>b.id);
   const newOnes=now.filter(id=>!prev.includes(id));
   if(newOnes.length){
     userState.earnedBadges=now;
@@ -2239,43 +2628,17 @@ async function openSurahViewer(num){
     if(json.code !== 200 || !json.data || json.data.length < 2) throw new Error('Unexpected response');
     const arAyahs = json.data[0].ayahs;   // Uthmani Arabic
     const enAyahs = json.data[1].ayahs;   // English translation
-
-    // Robust Bismillah stripping for verse 1 of surahs 2–113
+    // Bismillah pattern — strip from verse 1 for surahs 2-113
     // (Surah 1: Bismillah IS verse 1; Surah 9: no Bismillah)
-    // The API embeds Bismillah into verse 1 text. We strip it since
-    // it's already shown separately in the sv-bismillah banner.
-    // Instead of fragile regex, we detect the Bismillah by looking for
-    // "الرحيم" (stripped of diacritics) which ends the Bismillah phrase.
-    function stripBismillah(text) {
-      // Remove all diacritics (tashkeel) for matching purposes
-      const stripped = text.replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED]/g, '');
-      // Find "الرحيم" (end of Bismillah) in diacritics-stripped version
-      const marker = 'الرحيم';
-      const idx = stripped.indexOf(marker);
-      if (idx === -1) return text; // not found, return as-is
-      // Map position back to original text: count non-diacritic chars
-      let origIdx = 0, count = 0;
-      for (origIdx = 0; origIdx < text.length; origIdx++) {
-        const c = text.charCodeAt(origIdx);
-        const isDiacritic = (c >= 0x0610 && c <= 0x061A) || (c >= 0x064B && c <= 0x065F) || c === 0x0670 || (c >= 0x06D6 && c <= 0x06DC) || (c >= 0x06DF && c <= 0x06E4) || c === 0x06E7 || c === 0x06E8 || (c >= 0x06EA && c <= 0x06ED);
-        if (!isDiacritic) count++;
-        if (count === idx + marker.length) { origIdx++; break; }
-      }
-      // Skip any whitespace after the Bismillah
-      while (origIdx < text.length && /\s/.test(text[origIdx])) origIdx++;
-      const result = text.substring(origIdx);
-      return result || text; // fallback to full text if stripping removed everything
-    }
-
+    const bismillahAr = /^بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ\s*/;
+    const bismillahEn = /^In the name of Allah[^.]*\.\s*/i;
     verseCache[num] = arAyahs.map((a, i) => {
       let arText = a.text;
       let enText = (enAyahs[i] && enAyahs[i].text) || '';
-      if (i === 0 && num !== 1 && num !== 9) {
-        arText = stripBismillah(arText);
-        // English: strip "In the name of..." prefix
-        enText = enText.replace(/^In\s+the\s+name\s+of\s+Allah[\s\S]*?(?:Merciful|Mercy)[.,;:!?\-–—]*\s*/i, '').trim();
-        // Capitalize first letter after stripping
-        if (enText) enText = enText.charAt(0).toUpperCase() + enText.slice(1);
+      // Strip Bismillah from first verse for surahs 2–113
+      if(i === 0 && num !== 1 && num !== 9){
+        arText = arText.replace(bismillahAr, '').trim();
+        enText = enText.replace(bismillahEn, '').trim();
       }
       return { numberInSurah: a.numberInSurah, text: arText, translation: enText };
     });
@@ -2373,7 +2736,9 @@ function hideLoading(){
   }, 4000);
 })();
 
-if(localStorage.getItem('qtTheme')==='dark'){
+// Theme init handled by settings script above (supports milk/petal/dark/default)
+const _savedThemeCheck = localStorage.getItem('qtTheme');
+if(_savedThemeCheck === 'dark') {
   document.body.classList.add('dark-mode');
   document.getElementById('themeKnob').textContent='☀️';
 }
@@ -2434,12 +2799,516 @@ const _fbPoll = setInterval(() => {
   }
 }, 100);
 
+
+// ═══════════════════════════════════════════════════════
+// AUDIO PLAYER — Surah Recitation via AlQuran.cloud
+// ═══════════════════════════════════════════════════════
+let _audio = null;
+let _currentSurahNum = 0;
+
+function initSurahAudio(num) {
+  _currentSurahNum = num;
+  if (_audio) { _audio.pause(); _audio = null; }
+  document.getElementById('svPlayBtn').textContent = '▶';
+  document.getElementById('svProgressFill').style.width = '0%';
+  document.getElementById('svAudioTime').textContent = '0:00';
+  document.getElementById('svAudioTitle').textContent = SURAH_TRANSLIT[num] || ('Surah ' + num);
+}
+
+function toggleSurahAudio() {
+  const num = _currentSurahNum;
+  if (!num) return;
+  const btn = document.getElementById('svPlayBtn');
+  if (_audio && !_audio.paused) {
+    _audio.pause(); btn.textContent = '▶'; return;
+  }
+  if (!_audio) {
+    // Use alquran.cloud audio API
+    const url = `https://cdn.islamic.network/quran/audio-surah/128/ar.abdurrahmaansudais/${num}.mp3`;
+    _audio = new Audio(url);
+    _audio.ontimeupdate = () => {
+      if (!_audio.duration) return;
+      const pct = (_audio.currentTime / _audio.duration) * 100;
+      document.getElementById('svProgressFill').style.width = pct + '%';
+      const m = Math.floor(_audio.currentTime/60), s = Math.floor(_audio.currentTime%60);
+      document.getElementById('svAudioTime').textContent = m + ':' + String(s).padStart(2,'0');
+    };
+    _audio.onended = () => { btn.textContent = '▶'; document.getElementById('svProgressFill').style.width = '0%'; };
+    _audio.onerror = () => { btn.textContent = '⚠️'; showToast('🌐','Audio unavailable','Internet connection required'); };
+  }
+  _audio.play().catch(() => showToast('🌐','Audio unavailable','Internet connection required'));
+  btn.textContent = '⏸';
+}
+
+function seekAudio(e) {
+  if (!_audio || !_audio.duration) return;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  _audio.currentTime = pct * _audio.duration;
+}
+
+// Patch openSurahViewer to init audio
+const _origOpenSurahViewer = openSurahViewer;
+openSurahViewer = function(num) {
+  _origOpenSurahViewer(num);
+  initSurahAudio(num);
+};
+
+// Patch closeSurahViewer to stop audio
+const _origCloseSurahViewer = closeSurahViewer;
+closeSurahViewer = function() {
+  if (_audio) { _audio.pause(); _audio = null; }
+  document.getElementById('svPlayBtn').textContent = '▶';
+  _origCloseSurahViewer();
+};
+
+// ═══════════════════════════════════════════════════════
+// SHARE PROGRESS
+// ═══════════════════════════════════════════════════════
+function renderShareSection() {
+  const {m, mg, r, pct, ns} = getStats();
+  const streak = calcStreak();
+  return `
+    <div class="share-card" id="shareCard">
+      <div class="share-card-title">My Quran Progress</div>
+      <div class="share-card-num">${m}</div>
+      <div class="share-card-sub">of 114 surahs memorised · ${pct}% complete</div>
+      <div style="display:flex;justify-content:center;gap:24px;margin-bottom:20px">
+        <div style="text-align:center"><div style="font-size:24px;font-weight:800">🔥${streak}</div><div style="font-size:11px;opacity:0.8">day streak</div></div>
+        <div style="text-align:center"><div style="font-size:24px;font-weight:800">${mg}</div><div style="font-size:11px;opacity:0.8">memorising</div></div>
+        <div style="text-align:center"><div style="font-size:24px;font-weight:800">${r}</div><div style="font-size:11px;opacity:0.8">revising</div></div>
+      </div>
+      <div class="share-btns">
+        <button class="share-btn" onclick="copyProgressText()">📋 Copy Progress</button>
+        <button class="share-btn" onclick="shareProgress()">📤 Share</button>
+      </div>
+    </div>`;
+}
+
+function copyProgressText() {
+  const {m, pct} = getStats();
+  const streak = calcStreak();
+  const text = `📖 My Quran Progress
+✅ ${m}/114 surahs memorised (${pct}%)
+🔥 ${streak} day streak
+
+Alhamdulillah! Track yours at ${window.location.href}`;
+  navigator.clipboard.writeText(text).then(() => showToast('📋', 'Copied!', 'Progress copied to clipboard'));
+}
+
+function shareProgress() {
+  const {m, pct} = getStats();
+  const streak = calcStreak();
+  if (navigator.share) {
+    navigator.share({ title: 'My Quran Progress', text: `✅ ${m}/114 surahs memorised (${pct}%) — 🔥 ${streak} day streak! Alhamdulillah!`, url: window.location.href });
+  } else copyProgressText();
+}
+
+// ═══════════════════════════════════════════════════════
+// QUIZ TAB
+// ═══════════════════════════════════════════════════════
+let _quiz = { active: false, mode: '', questions: [], index: 0, score: 0, answered: false };
+
+function renderQuizTab() {
+  const el = document.getElementById('quizContent');
+  if (!_quiz.active) {
+    el.innerHTML = `
+      <div style="max-width:680px;margin:0 auto">
+        ${renderShareSection()}
+        <h2 style="font-size:19px;font-weight:700;margin-bottom:6px">🧠 Quiz Mode</h2>
+        <p style="color:var(--text3);font-size:13px;margin-bottom:24px">Test your knowledge of the Quran</p>
+        <div class="quiz-mode-grid">
+          <div class="quiz-mode-card" onclick="startQuiz('meaning')">
+            <div class="qm-emoji">📖</div>
+            <div class="qm-title">Surah Meanings</div>
+            <div class="qm-desc">Match Arabic names to their English meanings</div>
+          </div>
+          <div class="quiz-mode-card" onclick="startQuiz('arabic')">
+            <div class="qm-emoji">🕌</div>
+            <div class="qm-title">Arabic Names</div>
+            <div class="qm-desc">Identify the surah from its Arabic name</div>
+          </div>
+          <div class="quiz-mode-card" onclick="startQuiz('juz')">
+            <div class="qm-emoji">📚</div>
+            <div class="qm-title">Which Juz?</div>
+            <div class="qm-desc">Which Juz does this surah belong to?</div>
+          </div>
+          <div class="quiz-mode-card" onclick="startQuiz('verses')">
+            <div class="qm-emoji">📜</div>
+            <div class="qm-title">Verse Count</div>
+            <div class="qm-desc">How many verses does this surah have?</div>
+          </div>
+          <div class="quiz-mode-card" onclick="startQuiz('makkah')">
+            <div class="qm-emoji">🕋</div>
+            <div class="qm-title">Makki or Madani?</div>
+            <div class="qm-desc">Was this surah revealed in Makkah or Madinah?</div>
+          </div>
+          <div class="quiz-mode-card" onclick="startQuiz('memorised')">
+            <div class="qm-emoji">✅</div>
+            <div class="qm-title">Your Memorised</div>
+            <div class="qm-desc">Quiz only surahs you've memorised</div>
+          </div>
+        </div>
+      </div>`;
+  } else if (_quiz.done) {
+    renderQuizResult();
+  } else {
+    renderQuizQuestion();
+  }
+}
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function startQuiz(mode) {
+  let pool = SURAHS;
+  if (mode === 'memorised') {
+    pool = SURAHS.filter(s => {
+      const found = userState.surahs.find(x => x.n === s.n);
+      return found && found.status === 'memorised';
+    });
+    if (pool.length < 4) { showToast('📖','Not enough surahs','Memorise at least 4 surahs first!'); return; }
+  }
+  const questions = shuffle(pool).slice(0, 10).map(s => buildQuestion(mode, s, pool));
+  _quiz = { active: true, mode, questions, index: 0, score: 0, answered: false, done: false };
+  renderQuizTab();
+}
+
+function buildQuestion(mode, surah, pool) {
+  if (mode === 'meaning') {
+    const correct = SURAH_MEANING[surah.n] || surah.en;
+    const wrongs = shuffle(pool.filter(s => s.n !== surah.n)).slice(0,3).map(s => SURAH_MEANING[s.n] || s.en);
+    return { prompt: surah.ar, promptLabel: 'What does this surah name mean?', correct, options: shuffle([correct, ...wrongs]), type: 'text' };
+  } else if (mode === 'arabic') {
+    const correct = surah.en;
+    const wrongs = shuffle(pool.filter(s => s.n !== surah.n)).slice(0,3).map(s => s.en);
+    return { prompt: surah.ar, promptLabel: 'What is the name of this surah?', correct, options: shuffle([correct, ...wrongs]), type: 'text' };
+  } else if (mode === 'juz') {
+    const correct = 'Juz ' + surah.juz;
+    const nums = shuffle([...new Set(pool.map(s=>s.juz))].filter(j=>j!==surah.juz)).slice(0,3).map(j=>'Juz '+j);
+    return { prompt: surah.ar, promptLabel: `Which Juz? (${surah.en})`, correct, options: shuffle([correct,...nums]), type: 'text' };
+  } else if (mode === 'verses') {
+    const correct = String(surah.v) + ' verses';
+    const wrongs = shuffle([...new Set(pool.filter(s=>s.n!==surah.n).map(s=>s.v))]).slice(0,3).map(v=>v+' verses');
+    return { prompt: surah.ar, promptLabel: `How many verses? (${surah.en})`, correct, options: shuffle([correct,...wrongs]), type: 'text' };
+  } else if (mode === 'makkah') {
+    const correct = SURAH_PLACE[surah.n] || 'Makkah';
+    const wrong = correct === 'Makkah' ? 'Madinah' : 'Makkah';
+    return { prompt: surah.ar, promptLabel: `Makki or Madani? (${surah.en})`, correct, options: shuffle([correct, wrong]), type: 'text' };
+  } else { // memorised mode reuses arabic
+    const correct = surah.en;
+    const wrongs = shuffle(pool.filter(s => s.n !== surah.n)).slice(0,3).map(s => s.en);
+    return { prompt: surah.ar, promptLabel: 'What is the name of this surah?', correct, options: shuffle([correct, ...wrongs]), type: 'text' };
+  }
+}
+
+function renderQuizQuestion() {
+  const q = _quiz.questions[_quiz.index];
+  const total = _quiz.questions.length;
+  const pct = (_quiz.index / total) * 100;
+  const el = document.getElementById('quizContent');
+  el.innerHTML = `
+    <div style="max-width:680px;margin:0 auto">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="font-size:12px;font-weight:600;color:var(--text3)">Question ${_quiz.index+1} of ${total}</div>
+        <div style="font-size:12px;font-weight:600;color:var(--teal)">Score: ${_quiz.score}</div>
+        <button onclick="endQuiz()" style="font-size:12px;color:var(--text3);background:none;border:none;cursor:pointer">✕ Quit</button>
+      </div>
+      <div class="quiz-progress"><div class="quiz-progress-fill" style="width:${pct}%"></div></div>
+      <div class="quiz-card">
+        <div class="quiz-question-label">${esc(q.promptLabel)}</div>
+        <div class="quiz-question-arabic">${esc(q.prompt)}</div>
+        <div class="quiz-options" id="quizOptions">
+          ${q.options.map(opt => `<button class="quiz-option" onclick="answerQuiz('${esc(opt).replace(/'/g,"&#39;")}')">${esc(opt)}</button>`).join('')}
+        </div>
+        <div id="quizFeedback" style="min-height:40px;font-size:14px;font-weight:600;color:var(--text3)"></div>
+      </div>
+    </div>`;
+}
+
+function answerQuiz(chosen) {
+  if (_quiz.answered) return;
+  _quiz.answered = true;
+  const q = _quiz.questions[_quiz.index];
+  const correct = chosen === q.correct;
+  if (correct) _quiz.score++;
+  // Highlight options
+  document.querySelectorAll('.quiz-option').forEach(btn => {
+    if (btn.textContent === q.correct) btn.classList.add('correct');
+    else if (btn.textContent === chosen && !correct) btn.classList.add('wrong');
+    btn.onclick = null;
+  });
+  const fb = document.getElementById('quizFeedback');
+  fb.innerHTML = correct
+    ? '<span style="color:var(--green)">✅ Correct! Masha'Allah!</span>'
+    : `<span style="color:var(--red)">❌ Correct answer: ${esc(q.correct)}</span>`;
+  setTimeout(() => {
+    _quiz.index++;
+    _quiz.answered = false;
+    if (_quiz.index >= _quiz.questions.length) { _quiz.done = true; }
+    renderQuizTab();
+  }, 1400);
+}
+
+function renderQuizResult() {
+  const total = _quiz.questions.length;
+  const pct = Math.round((_quiz.score / total) * 100);
+  const emoji = pct >= 90 ? '🏆' : pct >= 70 ? '🌟' : pct >= 50 ? '😊' : '📖';
+  const msg = pct >= 90 ? 'Outstanding! Masha'Allah!' : pct >= 70 ? 'Great work! Keep it up!' : pct >= 50 ? 'Good effort! Keep studying!' : 'Keep learning, you'll improve!';
+  const el = document.getElementById('quizContent');
+  el.innerHTML = `
+    <div style="max-width:480px;margin:0 auto">
+      <div class="quiz-result-card">
+        <div class="quiz-result-emoji">${emoji}</div>
+        <div class="quiz-result-title">${_quiz.score}/${total}</div>
+        <div class="quiz-result-sub">${pct}% — ${msg}</div>
+        <div class="quiz-score" style="margin-bottom:28px">
+          <div class="quiz-score-item"><div class="quiz-score-num" style="color:var(--green)">${_quiz.score}</div><div class="quiz-score-label">Correct</div></div>
+          <div class="quiz-score-item"><div class="quiz-score-num" style="color:var(--red)">${total - _quiz.score}</div><div class="quiz-score-label">Wrong</div></div>
+          <div class="quiz-score-item"><div class="quiz-score-num" style="color:var(--teal)">${pct}%</div><div class="quiz-score-label">Score</div></div>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:center">
+          <button class="btn btn-primary" style="width:auto;margin:0" onclick="startQuiz('${_quiz.mode}')">🔄 Try Again</button>
+          <button class="btn btn-secondary" onclick="endQuiz()">← Back</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function endQuiz() { _quiz = { active: false }; renderQuizTab(); }
+
+// ═══════════════════════════════════════════════════════
+// TAJWEED MISTAKE LOGGER
+// ═══════════════════════════════════════════════════════
+function getTajweedMistakes() {
+  return userState.tajweedMistakes || [];
+}
+
+const TAJWEED_RULES = ['Makharij (Pronunciation)', 'Madd (Elongation)', 'Ghunna (Nasalisation)', 'Qalqalah (Echo)', 'Waqf (Stopping)', 'Other'];
+const TAJWEED_RULE_KEYS = ['makharij', 'madd', 'ghunna', 'qalqalah', 'waqf', 'other'];
+
+function renderTajweedTab() {
+  const mistakes = getTajweedMistakes();
+  const el = document.getElementById('tajweedContent');
+
+  // Build rule stats
+  const ruleCounts = {};
+  TAJWEED_RULE_KEYS.forEach(k => ruleCounts[k] = 0);
+  mistakes.forEach(m => { if (ruleCounts[m.rule] !== undefined) ruleCounts[m.rule]++; });
+  const maxCount = Math.max(1, ...Object.values(ruleCounts));
+
+  const ruleColors = { makharij: '#7366ff', madd: '#2697f3', ghunna: '#f4a53a', qalqalah: '#51bb25', waqf: '#f73164', other: '#98a2b3' };
+
+  el.innerHTML = `
+    <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div><h2 style="font-size:19px;font-weight:700;margin-bottom:4px">✏️ Tajweed Logger</h2><p style="color:var(--text3);font-size:13px">Track and improve your recitation mistakes</p></div>
+    </div>
+
+    <div class="tjw-add-form">
+      <div class="card-title" style="margin-bottom:16px">➕ Log a Mistake</div>
+      <div class="tjw-form-row">
+        <select class="tjw-select" id="tjwSurah">
+          <option value="">Select Surah…</option>
+          ${SURAHS.map(s => `<option value="${s.n}">${s.n}. ${s.en} — ${s.ar}</option>`).join('')}
+        </select>
+        <select class="tjw-select" id="tjwRule">
+          <option value="">Select Rule…</option>
+          ${TAJWEED_RULES.map((r,i) => `<option value="${TAJWEED_RULE_KEYS[i]}">${r}</option>`).join('')}
+        </select>
+      </div>
+      <div class="tjw-form-row">
+        <input class="tjw-input" type="text" id="tjwNote" placeholder="Describe the mistake (e.g. missed ghunna in verse 3)…" style="grid-column:1/-1">
+      </div>
+      <button class="btn btn-primary" style="width:auto;margin:0" onclick="logTajweedMistake()">Log Mistake</button>
+    </div>
+
+    <div class="tajweed-grid" style="margin-bottom:24px">
+      <div class="tajweed-stat-card">
+        <div class="card-title" style="margin-bottom:16px">📊 Mistakes by Rule</div>
+        ${TAJWEED_RULES.map((r,i) => {
+          const key = TAJWEED_RULE_KEYS[i];
+          const count = ruleCounts[key];
+          const w = Math.round((count/maxCount)*100);
+          return `<div class="tjw-rule-bar">
+            <div class="tjw-rule-name">${r.split(' ')[0]}</div>
+            <div class="tjw-bar-track"><div class="tjw-bar-fill" style="width:${w}%;background:${ruleColors[key]}"></div></div>
+            <div class="tjw-rule-count" style="color:${ruleColors[key]}">${count}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="tajweed-stat-card">
+        <div class="card-title" style="margin-bottom:16px">📈 Overview</div>
+        <div style="text-align:center;padding:16px">
+          <div style="font-size:56px;font-weight:900;color:var(--teal);letter-spacing:-2px">${mistakes.length}</div>
+          <div style="font-size:13px;color:var(--text3);margin-bottom:16px">total mistakes logged</div>
+          <div style="font-size:13px;color:var(--text2)">${mistakes.length === 0 ? 'Start logging to track progress' : `Most common: ${TAJWEED_RULES[TAJWEED_RULE_KEYS.indexOf(Object.entries(ruleCounts).sort((a,b)=>b[1]-a[1])[0][0])]}`}</div>
+        </div>
+        ${mistakes.length > 0 ? `<button class="btn btn-danger btn-sm" style="width:auto;margin-top:12px" onclick="clearTajweedMistakes()">🗑️ Clear All</button>` : ''}
+      </div>
+    </div>
+
+    <div>
+      <div class="card-title" style="margin-bottom:16px">📋 Recent Mistakes</div>
+      ${mistakes.length === 0
+        ? '<div class="empty-state"><div class="empty-icon">✅</div><p>No mistakes logged yet. Start tracking to improve!</p></div>'
+        : mistakes.slice().reverse().map((m, i) => `
+          <div class="tjw-mistake-item">
+            <span class="tjw-rule-tag ${m.rule}">${m.rule}</span>
+            <div class="tjw-mistake-text">
+              <div class="tjw-mistake-surah">${esc(m.surahName)} <span style="font-family:var(--arabic);font-size:15px;color:var(--teal)">${esc(m.surahAr)}</span></div>
+              <div class="tjw-mistake-note">${esc(m.note || 'No note')}</div>
+            </div>
+            <div>
+              <div class="tjw-mistake-date">${new Date(m.ts).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>
+              <button onclick="deleteTajweedMistake(${mistakes.length-1-i})" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:12px;margin-top:4px">✕</button>
+            </div>
+          </div>`).join('')}
+    </div>`;
+}
+
+async function logTajweedMistake() {
+  const surahNum = parseInt(document.getElementById('tjwSurah').value);
+  const rule = document.getElementById('tjwRule').value;
+  const note = document.getElementById('tjwNote').value.trim();
+  if (!surahNum || !rule) { showToast('⚠️','Missing info','Please select a surah and rule'); return; }
+  const surah = SURAHS.find(s => s.n === surahNum);
+  if (!userState.tajweedMistakes) userState.tajweedMistakes = [];
+  userState.tajweedMistakes.push({ surahNum, surahName: surah.en, surahAr: surah.ar, rule, note, ts: new Date().toISOString() });
+  logActivity('✏️', `Tajweed: ${surah.en}`, `Rule: ${rule}${note ? ' — ' + note.slice(0,40) : ''}`);
+  await saveState();
+  document.getElementById('tjwSurah').value = '';
+  document.getElementById('tjwRule').value = '';
+  document.getElementById('tjwNote').value = '';
+  showToast('✏️','Mistake logged!','Keep practicing');
+  renderTajweedTab();
+}
+
+async function deleteTajweedMistake(index) {
+  userState.tajweedMistakes.splice(index, 1);
+  await saveState();
+  renderTajweedTab();
+}
+
+async function clearTajweedMistakes() {
+  if (!confirm('Clear all tajweed mistakes?')) return;
+  userState.tajweedMistakes = [];
+  await saveState();
+  renderTajweedTab();
+}
+
+// ═══════════════════════════════════════════════════════
+// DUA TRACKER
+// ═══════════════════════════════════════════════════════
+const BUILTIN_DUAS = [
+  { id:'d1', occasion:'Morning & Evening', arabic:'أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ', transliteration:"A'udhu billahi minash-shaytanir-rajim", translation:'I seek refuge in Allah from the accursed Shaytaan.' },
+  { id:'d2', occasion:'Morning & Evening', arabic:'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ', transliteration:'Bismillahir-rahmanir-rahim', translation:'In the name of Allah, the Most Gracious, the Most Merciful.' },
+  { id:'d3', occasion:'Before Eating', arabic:'بِسْمِ اللَّهِ وَعَلَى بَرَكَةِ اللَّهِ', transliteration:'Bismillah wa ala barakatillah', translation:'In the name of Allah and with the blessings of Allah.' },
+  { id:'d4', occasion:'After Eating', arabic:'الحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مُسْلِمِينَ', transliteration:"Alhamdulillahil-ladhi at'amana wa saqana wa ja'alana muslimin", translation:'All praise is for Allah who fed us and provided for us with drink, and made us Muslims.' },
+  { id:'d5', occasion:'Entering Home', arabic:'بِسْمِ اللَّهِ وَلَجْنَا، وَبِسْمِ اللَّهِ خَرَجْنَا، وَعَلَى اللَّهِ رَبِّنَا تَوَكَّلْنَا', transliteration:'Bismillahi walajna, wa bismillahi kharajna, wa ala Allahi rabbina tawakkalna', translation:'In the name of Allah we enter, in the name of Allah we leave, and upon our Lord we place our trust.' },
+  { id:'d6', occasion:'Travelling', arabic:'سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَى رَبِّنَا لَمُنقَلِبُونَ', transliteration:"Subhanaladhi sakhkhara lana hadha wa ma kunna lahu muqrinin wa inna ila rabbina lamunqalibun", translation:'Glory be to the One who has subjected this to us, and we were not capable of that, and verily, to our Lord, we shall return.' },
+  { id:'d7', occasion:'Before Sleeping', arabic:'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا', transliteration:'Bismika Allahumma amutu wa ahya', translation:'In Your name, O Allah, I die and I live.' },
+  { id:'d8', occasion:'Upon Waking', arabic:'الحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ', transliteration:"Alhamdulillahil-ladhi ahyana ba'da ma amatana wa ilayhin-nushur", translation:'All praise is for Allah who gave us life after causing us to die, and to Him is the resurrection.' },
+  { id:'d9', occasion:'Entering Mosque', arabic:'اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ', transliteration:"Allahumma iftah li abwaba rahmatik", translation:'O Allah, open the gates of Your mercy for me.' },
+  { id:'d10', occasion:'Leaving Mosque', arabic:'اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ', transliteration:"Allahumma inni as'aluka min fadlik", translation:'O Allah, I ask of Your bounty.' },
+  { id:'d11', occasion:'Supplication', arabic:'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ', transliteration:"Rabbana atina fid-dunya hasanatan wa fil-akhirati hasanatan waqina 'adhaban-nar", translation:'Our Lord, give us in this world that which is good and in the Hereafter that which is good, and protect us from the punishment of the Fire.' },
+  { id:'d12', occasion:'Distress', arabic:'لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ الظَّالِمِينَ', transliteration:"La ilaha illa anta subhanaka inni kuntu minaz-zalimin", translation:'There is no deity except You; exalted are You. Indeed, I have been of the wrongdoers.' },
+];
+
+function getDuaState() {
+  return userState.duaState || {};
+}
+
+let _duaFilter = 'all';
+
+function renderDuaTab() {
+  const duaState = getDuaState();
+  const memorised = Object.values(duaState).filter(v=>v).length;
+  const total = BUILTIN_DUAS.length;
+  const occasions = ['all', ...new Set(BUILTIN_DUAS.map(d => d.occasion))];
+
+  const filtered = _duaFilter === 'all' ? BUILTIN_DUAS : 
+                   _duaFilter === 'memorised' ? BUILTIN_DUAS.filter(d => duaState[d.id]) :
+                   BUILTIN_DUAS.filter(d => d.occasion === _duaFilter);
+
+  const el = document.getElementById('duaContent');
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+      <div>
+        <h2 style="font-size:19px;font-weight:700;margin-bottom:4px">🤲 Dua Collection</h2>
+        <p style="color:var(--text3);font-size:13px">Daily supplications — ${memorised}/${total} memorised</p>
+      </div>
+      <div style="background:linear-gradient(135deg,rgba(115,102,255,0.08),rgba(38,151,243,0.06));border:1px solid rgba(115,102,255,0.12);border-radius:12px;padding:10px 16px;text-align:center">
+        <div style="font-size:24px;font-weight:800;color:var(--teal)">${Math.round(memorised/total*100)}%</div>
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:700">Memorised</div>
+      </div>
+    </div>
+
+    <div class="dua-filter-bar">
+      ${occasions.map(o => `<button class="dua-filter-btn ${_duaFilter===o?'active':''}" onclick="setDuaFilter('${o}')">${o === 'memorised' ? '✅ Memorised' : o === 'all' ? 'All Duas' : o}</button>`).join('')}
+      <button class="dua-filter-btn ${_duaFilter==='memorised'?'active':''}" onclick="setDuaFilter('memorised')">✅ My Memorised</button>
+    </div>
+
+    <div class="dua-grid">
+      ${filtered.map(dua => `
+        <div class="dua-card ${duaState[dua.id] ? 'memorised' : ''}">
+          ${duaState[dua.id] ? '<div class="dua-count-badge">✓ Memorised</div>' : ''}
+          <div class="dua-occasion">${esc(dua.occasion)}</div>
+          <div class="dua-arabic">${esc(dua.arabic)}</div>
+          <div class="dua-transliteration">${esc(dua.transliteration)}</div>
+          <div class="dua-translation">${esc(dua.translation)}</div>
+          <div class="dua-actions">
+            <button class="dua-mem-btn ${duaState[dua.id]?'active':''}" onclick="toggleDuaMemorised('${dua.id}')">
+              ${duaState[dua.id] ? '✅ Memorised' : '📖 Mark Memorised'}
+            </button>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function setDuaFilter(filter) {
+  _duaFilter = filter;
+  renderDuaTab();
+}
+
+async function toggleDuaMemorised(duaId) {
+  if (!userState.duaState) userState.duaState = {};
+  userState.duaState[duaId] = !userState.duaState[duaId];
+  const dua = BUILTIN_DUAS.find(d => d.id === duaId);
+  if (dua) {
+    if (userState.duaState[duaId]) {
+      logActivity('🤲', `Dua memorised: ${dua.occasion}`, dua.transliteration.slice(0,50));
+      showToast('🤲', 'Dua Memorised!', 'Masha'Allah! Keep it up!');
+    }
+  }
+  await saveState();
+  renderDuaTab();
+}
+
+// Also add share section to overview tab
+const _origRenderKPIs = renderKPIs;
+renderKPIs = function() {
+  _origRenderKPIs();
+  // Add share section if not already there
+  const existingShare = document.getElementById('shareCard');
+  if (!existingShare) {
+    const kpiGrid = document.getElementById('kpiGrid');
+    if (kpiGrid) {
+      const shareDiv = document.createElement('div');
+      shareDiv.id = 'overviewShareSection';
+      shareDiv.style.cssText = 'margin-bottom:24px';
+      shareDiv.innerHTML = renderShareSection();
+      kpiGrid.insertAdjacentElement('afterend', shareDiv);
+    }
+  }
+};
+
+
 // Keyboard listeners
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     closeSurahViewer();
     closeGoalModal();
     closeStudentModal();
+    closeSettings();
   }
 });
 </script>
